@@ -1,4 +1,4 @@
-package com.example.asteroids;
+package edu.ycp.cs496.main;
 
 import java.nio.FloatBuffer;
 
@@ -10,6 +10,8 @@ import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.os.Bundle;
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.Menu;
 import android.view.MotionEvent;
 
@@ -140,6 +142,8 @@ public class AsteroidView extends Activity {
 		// Create GLSurfaceView
 		mGLView = new OpenGLSurfaceView(this);
 		setContentView(mGLView);
+		
+
 	}
 
 	@Override

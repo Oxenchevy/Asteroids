@@ -1,4 +1,5 @@
-package com.example.asteroids;
+package edu.ycp.cs496.main;
+
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -38,22 +39,16 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer{
 
 	public float mAngle;
 
-	
+
 	public void init() {
 
 		float triangleCoords[] = {
 				// X, Y, Z
-				/* -0.25f, -0.125f, 0,
+				-0.25f, -0.125f, 0,
 			      0.25f, -0.125f, 0,
-			      0.0f,  0.259016994f, 0	*/
-				
-				
-				0.0f,1.0f,0.0f,
-				1.0f,1.0f,0.0f,
-				1.0f,-1.0f,0.0f,
-				-1.0f,1.0f,0.0f,
-				
-			      
+			      0.0f,  0.259016994f, 0	
+
+
 		}; 
 		// initialize vertex Buffer for triangle  
 		ByteBuffer vbb = ByteBuffer.allocateDirect(
@@ -95,7 +90,7 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer{
 		// Get vertex shader variable reference
 		maPositionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");
 		muMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");	
-	
+
 	}
 
 
@@ -161,4 +156,3 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer{
 
 
 }
-
