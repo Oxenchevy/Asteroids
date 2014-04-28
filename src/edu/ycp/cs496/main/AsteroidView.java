@@ -30,20 +30,8 @@ public class AsteroidView extends Activity  {
 
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE); 
-
-		magnetometerSensor = Sensor.TYPE_MAGNETIC_FIELD; 
-		accelerometerSensor = Sensor.TYPE_ACCELEROMETER; 
-		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(magnetometerSensor), SensorManager.SENSOR_DELAY_UI); 
-		sensorManager.registerListener(sensorEventListener,  sensorManager.getDefaultSensor(accelerometerSensor), SensorManager.SENSOR_DELAY_UI); 
-
-
-
 		cont = new ShipController();
-		setContentView(new Panel(this, cont));
-
-
-
-
+		setContentView(new Panel(this, cont,sensorManager));
 	}
 
 
@@ -79,15 +67,12 @@ public class AsteroidView extends Activity  {
 					SensorManager.getOrientation(R, orientation);
 					float XAccel  = orientation[1]; // pitch
 					float YAccel = orientation[2]; // roll
-
-
+					
+					
+					System.out.println(XAccel);
+					System.out.println(YAccel);
 
 					cont.updateShip(XAccel, YAccel);
-
-
-
-
-
 				}
 			}
 

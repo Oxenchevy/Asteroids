@@ -37,10 +37,11 @@ public class ViewThread extends Thread {
 	         if (canvas != null) {
 	            // Update state based on elapsed time 
 	            mElapsed = System.currentTimeMillis() - mStartTime;
-	            mPanel.update(mElapsed);
+	           // mPanel.update(mElapsed);
 
 	            // Render updated state
-	            mPanel.doDraw(canvas,mElapsed);
+	         
+	            mPanel.draw(canvas, mElapsed);
 
 	            // Release lock on canvas object
 	            mHolder.unlockCanvasAndPost(canvas);

@@ -15,6 +15,7 @@ public class Sprite {
 	private int mDy;
 	private Bitmap ballBitMap;
 	private Bitmap shipBitMap;
+	private Bitmap space;
 	
 	private ShipController cont;
 
@@ -25,6 +26,7 @@ public class Sprite {
 		//  shipBitMap = BitmapFactory.decodeResource(res, R.drawable.ship);
 	    ballBitMap = BitmapFactory.decodeResource(res, R.drawable.image_asteroid_small);
 	    shipBitMap = BitmapFactory.decodeResource(res, R.drawable.image_ship);
+	    space = BitmapFactory.decodeResource(res, R.drawable.space);
 		// Store upper left corner coordinates
 		mX = x - ballBitMap.getWidth()/2;
 		mY = y - ballBitMap.getHeight()/2;
@@ -37,8 +39,6 @@ public class Sprite {
 		this.cont = cont;
 	}
 
-
-
 	// Update (time-based) position
 	public void update(long elapsedTime) {
 		mX += mDx * (elapsedTime / 20f);
@@ -50,26 +50,37 @@ public class Sprite {
 	private void checkBoundary() {
 		// Left or right boundary
 		if (mX <= 0) {
-			mDx *= -1;
+			//mDx *= -1;
+			mX = Panel.mWidth;
+			mY = Panel.mHeight - mY;
+		} else if (mX  >= Panel.mWidth) {
+			//mDx *= -1;
 			mX = 0;
-		} else if (mX + ballBitMap.getWidth() >= Panel.mWidth) {
-			mDx *= -1;
-			mX = Panel.mWidth - ballBitMap.getWidth();
+			mY = Panel.mHeight - mY ;		
 		}
 
 		// Top or bottom boundary
 		if (mY <= 0) {
-			mDy *= -1;
-			mY = 0;
-		} else if (mY + ballBitMap.getHeight() >= Panel.mHeight) {
-			mDy *= -1;
-			mY = Panel.mHeight - ballBitMap.getHeight();
+			//mDx *= -1;
+			mY = Panel.mHeight;
+			mX = Panel.mWidth - mX;
+		} else if (mY  >= Panel.mHeight) {
+			//mDx *= -1;
+			mY= 0;
+			mX = Panel.mWidth - mX ;		
 		}
 	}
 
-	public void doDraw(Canvas canvas ) {
+	/*public void doDraw(Canvas canvas ) {
+		
+		canvas.drawBitmap(space, canvas.getWidth()/2,canvas.getHeight()/2, null);
 		canvas.drawBitmap(ballBitMap, mX, mY, null);
-		canvas.drawBitmap(shipBitMap, cont.getShip().getx(), cont.getShip().gety(), null);
 
-	}
+
+		canvas.drawBitmap(shipBitMap,canvas.getWidth()/2,canvas.getHeight()/2, null);
+		
+		
+	
+
+	}*/
 }

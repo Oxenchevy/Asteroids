@@ -4,7 +4,7 @@ import edu.ycp.cs496.asteroids.model.Ship;
 
 public class ShipController {
 	private Ship ship; 
-	float frameTime = 0.666f;
+	float frameTime = 0.016f;
 	
 public ShipController()
 {
