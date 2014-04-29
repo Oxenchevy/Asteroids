@@ -43,46 +43,7 @@ public class AsteroidView extends Activity  {
 		return true;
 	}
 
-	final SensorEventListener sensorEventListener = new SensorEventListener(){
-		public void onSensorChanged(SensorEvent event) {
-
-
-			float[] mGravity = null;
-			float[] mGeomagnetic = null;
-			if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
-				mGravity = event.values;
-			if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
-				mGeomagnetic = event.values;
-			if (mGravity != null && mGeomagnetic != null) {
-				float R[] = new float[9];
-				float I[] = new float[9];
-				boolean success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic);
-				if (success) {
-					float orientation[] = new float[3];
-					SensorManager.getOrientation(R, orientation);
-					float XAccel  = orientation[1]; // pitch
-					float YAccel = orientation[2]; // roll
-					
-					
-					System.out.println(XAccel);
-					System.out.println(YAccel);
-
-					cont.updateShip(XAccel, YAccel);
-				}
-			}
-
-			//Set sensor values as acceleration
-
-
-
-		}
-
-		@Override
-		public void onAccuracyChanged(Sensor sensor, int accuracy) {
-			// TODO Auto-generated method stub
-
-		}
-	};
+	
 
 
 

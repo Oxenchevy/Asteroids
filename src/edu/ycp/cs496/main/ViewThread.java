@@ -33,6 +33,7 @@ public class ViewThread extends Thread {
 	         // Obtain lock on canvas object
 	         canvas = mHolder.lockCanvas();
 	         mPanel.drawbackground(canvas);
+	         
 
 	         if (canvas != null) {
 	            // Update state based on elapsed time 

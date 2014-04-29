@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.hardware.Sensor;
@@ -24,6 +25,7 @@ import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 
 public class Panel extends SurfaceView implements Callback  {
@@ -38,10 +40,19 @@ public class Panel extends SurfaceView implements Callback  {
 	Context c;
 	float x;
 	float y;
-	
+
 	float roll;
 	float pitch;
+	/////////////////////////////
+	int fire_location_x;
+	int fire_location_y;
+	int clockwise_location_x;
+	int clockwise_location_y;
+	int counter_location_x;
+	int counter_location_y;
 
+	int angle;
+	///////////////////////////
 	private static final float ALPHA = 0.25f;
 	Canvas Canvas;
 
@@ -54,16 +65,11 @@ public class Panel extends SurfaceView implements Callback  {
 	private Bitmap fireBitMap;
 	private Bitmap space;
 
-	private ArrayList<Sprite> mSpriteList = new ArrayList<Sprite>();
+
 	private int mNumSprites;
 	private Paint mPaint;
-	
 
-	SensorManager sensorManager;
-	Sensor accelerometer; 
 
-	int accelerometerSensor; 
-	int magnetometerSensor;
 
 
 	public ShipController cont;
@@ -78,8 +84,8 @@ public class Panel extends SurfaceView implements Callback  {
 		getHolder().addCallback(this);
 		mPaint = new Paint();
 		mThread = new ViewThread(this);     
+		angle = 0;
 
-		
 		c = context;
 		paint = new Paint();
 
@@ -95,39 +101,122 @@ public class Panel extends SurfaceView implements Callback  {
 		display.getSize(size);
 		width = size.x;
 		height = size.y;
-	
-		
-		sensorManager = senors;
-
-		magnetometerSensor = Sensor.TYPE_MAGNETIC_FIELD; 
-		accelerometerSensor = Sensor.TYPE_ACCELEROMETER; 
-		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(magnetometerSensor), SensorManager.SENSOR_DELAY_UI); 
-		sensorManager.registerListener(sensorEventListener,  sensorManager.getDefaultSensor(accelerometerSensor), SensorManager.SENSOR_DELAY_UI);
 
 
 		startLevel();
 
 	}
-	
+
 	public void drawbackground(Canvas canvas)
 	{
-	    space = BitmapFactory.decodeResource(getResources(), R.drawable.space);
-	    ClockwiseRotateBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotateclockwise);
-	    CounterRotateBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotatecounter);
-	    fireBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_fire);
-	    
-	    Bitmap resizedFirebitmap = Bitmap.createScaledBitmap(fireBitMap, fireBitMap.getWidth()/2, fireBitMap.getHeight()/2, true);
-	    Bitmap resizedClockwisebitmap = Bitmap.createScaledBitmap(ClockwiseRotateBitMap, ClockwiseRotateBitMap.getWidth()/2, ClockwiseRotateBitMap.getHeight()/2, true);
-	    Bitmap resizedCounterbitmap = Bitmap.createScaledBitmap(CounterRotateBitMap, CounterRotateBitMap.getWidth()/2, CounterRotateBitMap.getHeight()/2, true);
-	    
-	    
-		canvas.drawBitmap(space, -400,-400, null);			
-		canvas.drawBitmap(resizedClockwisebitmap, resizedClockwisebitmap.getWidth() + 15, canvas.getHeight() - resizedClockwisebitmap.getHeight()-5, null);
-		canvas.drawBitmap(resizedCounterbitmap, 5, canvas.getHeight() - resizedCounterbitmap.getHeight()-5, null);
-		canvas.drawBitmap(resizedFirebitmap, canvas.getWidth() - resizedFirebitmap.getWidth(),canvas.getHeight() - resizedFirebitmap.getHeight(), null);
 		
+		
+		space = BitmapFactory.decodeResource(getResources(), R.drawable.space);
+		ClockwiseRotateBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotateclockwise);
+		CounterRotateBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotatecounter);
+		fireBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_fire);
+
+		Bitmap resizedFirebitmap = Bitmap.createScaledBitmap(fireBitMap, fireBitMap.getWidth()/2, fireBitMap.getHeight()/2, true);
+		Bitmap resizedClockwisebitmap = Bitmap.createScaledBitmap(ClockwiseRotateBitMap, ClockwiseRotateBitMap.getWidth()/2, ClockwiseRotateBitMap.getHeight()/2, true);
+		Bitmap resizedCounterbitmap = Bitmap.createScaledBitmap(CounterRotateBitMap, CounterRotateBitMap.getWidth()/2, CounterRotateBitMap.getHeight()/2, true);
+
+
+
+		fireBitMap = resizedFirebitmap;
+		CounterRotateBitMap = resizedCounterbitmap;
+		ClockwiseRotateBitMap = resizedClockwisebitmap;
+
+
+
+		canvas.drawBitmap(space, -400,-400, null);			
+		canvas.drawBitmap(ClockwiseRotateBitMap, ClockwiseRotateBitMap.getWidth() + 15, canvas.getHeight() - ClockwiseRotateBitMap.getHeight()-5, null);
+		canvas.drawBitmap(CounterRotateBitMap, 5, canvas.getHeight() - CounterRotateBitMap.getHeight()-5, null);
+		canvas.drawBitmap(fireBitMap, canvas.getWidth() - fireBitMap.getWidth(),canvas.getHeight() - fireBitMap.getHeight(), null);
+
+		fire_location_x = canvas.getWidth() - fireBitMap.getWidth();  
+		fire_location_y = canvas.getHeight() - fireBitMap.getHeight(); 
+		clockwise_location_x = ClockwiseRotateBitMap.getWidth() + 15;
+		clockwise_location_y = canvas.getHeight() - ClockwiseRotateBitMap.getHeight()-5;
+		counter_location_x = 5;
+		counter_location_y = canvas.getHeight() - CounterRotateBitMap.getHeight()-5;
 
 	}
+
+	@Override
+	public boolean onTouchEvent(final MotionEvent ev) {
+		switch (ev.getAction()) {
+		case MotionEvent.ACTION_DOWN: {
+			// Code on finger down
+			float posX = ev.getX();
+			float posY = ev.getY();	
+
+			float fx1;
+			float fx2;
+			float fy1;
+			float fy2;
+
+			// touch for the fire button
+			fx1 = fire_location_x-10;
+			fx2 = fire_location_x+100;			 
+			fy1 = fire_location_y;
+			fy2 =  fire_location_y+100;
+
+			if ((posX >= fx1 && posX <= fx2) && (posY >= fy1 && posY <= fy2)) {
+				// we are in the square
+				//Toast.makeText(c, "hit FIRE", Toast.LENGTH_SHORT).show();
+			} else {
+				// we are somewhere else on the canvas
+			}
+
+			// touch for the rotate right button
+
+			float rx1;
+			float rx2;
+			float ry1;
+			float ry2;
+
+			rx1 = counter_location_x-20;
+			rx2 = counter_location_x+60;
+
+			ry1 = counter_location_y;
+			ry2 =  counter_location_y+100;
+
+			if ((posX >= rx1 && posX <= rx2) && (posY >= ry1 && posY <= ry2)) {
+				// we are in the square
+				//Toast.makeText(c, "hit ROTATE LEFT", Toast.LENGTH_SHORT).show();
+			} else {
+				// we are somewhere else on the canvas
+			}
+
+			float crx1;
+			float crx2;
+			float cry1;
+			float cry2;
+
+			crx1 = clockwise_location_x-20;
+			crx2 = clockwise_location_x+60;			 
+			cry1 = clockwise_location_y;
+			cry2 =  clockwise_location_y+100;
+
+
+			if ((posX >= crx1 && posX <= crx2) && (posY >= cry1 && posY <= cry2)) {
+				// we are in the square
+				//Toast.makeText(c, "hit ROTATE RIGHT", Toast.LENGTH_SHORT).show();
+				
+				
+			} else {
+				// we are somewhere else on the canvas
+			}
+
+			//Toast.makeText(c, "pos X = " + posX + " pos Y = " + posY, Toast.LENGTH_SHORT).show();
+
+			break;
+		}
+
+		}
+		return true;
+	}
+
 
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
@@ -151,7 +240,7 @@ public class Panel extends SurfaceView implements Callback  {
 		Random rand = new Random();
 
 		for (int i = 0; i < level; i++){			
-		/*	synchronized (mSpriteList) {
+			/*	synchronized (mSpriteList) {
 				x = rand.nextInt(width) + 1;
 				mSpriteList.add(new Sprite(getResources(), (int)x, (int)y, cont));
 				mNumSprites = mSpriteList.size();
@@ -167,20 +256,21 @@ public class Panel extends SurfaceView implements Callback  {
 	}
 
 	public void draw(Canvas canvas, long elapsed) {
-	    ballBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.image_asteroid_small);
-	    shipBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.image_ship);
+		ballBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.image_asteroid_small);
+		shipBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.image_ship);
 
-	/*	canvas.drawColor(Color.BLACK);
-		synchronized (mSpriteList) {
-			for (Sprite sprite : mSpriteList) {
-				sprite.doDraw(canvas);
-			}
-		}*/
+		Matrix matrix = new Matrix();
+	
+	
+		cont.setAngle(20);
 		
 		
+		matrix.setRotate(cont.getAngle());
 
-		canvas.drawBitmap(shipBitMap,canvas.getWidth()/2,canvas.getHeight()/2, null);
-		
+		 // recreate the new Bitmap
+		 Bitmap resizedBitmap = Bitmap.createBitmap(shipBitMap,0, 0, shipBitMap.getWidth(), shipBitMap.getHeight(), matrix, true); 
+		canvas.drawBitmap(resizedBitmap,canvas.getWidth()/2,canvas.getHeight()/2, null);
+
 	}
 
 
@@ -194,82 +284,8 @@ public class Panel extends SurfaceView implements Callback  {
 		return (float) Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
 	}
 
-	final SensorEventListener sensorEventListener = new SensorEventListener(){
-		float[] gravity; 
-		float[] geomagnetic; 
-		float var;
-		float inclination;
-		public void onSensorChanged(SensorEvent sensorEvent) {
-
-			Context context;
-			int SCREEN_ORIENTATION_SENSOR_LANDSCAPE = 6;
-			final int rotation = getResources().getConfiguration().orientation;
-			float R[] = new float[9]; 
-			float I[] = new float[9]; 
-			float outR[] = new float[9]; 
-			float orientation[] = new float[3];
-
-
-			// Acquire and filter magnetic field data from device.
-			if(sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-				gravity = lowPass(sensorEvent.values.clone(), gravity);
-			}
-
-			// Acquire and filter accelerometer data from device.
-			if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-				geomagnetic = lowPass(sensorEvent.values.clone(), geomagnetic);
-			}
-
-			// As long as acquired data is valid, acquire the transformation matrix.
-			if(gravity != null && geomagnetic != null){
-				SensorManager.getRotationMatrix(R, I, gravity, geomagnetic);
-
-				inclination = (float) Math.acos(outR[8]);
-
-				// If the device is upright (or nearly so), use unadjusted values.
-				if (inclination < 25.0f || inclination > 155.0f ) {
-					SensorManager.getOrientation(R, orientation); 
-				} else { // Otherwise, remap the coordinates for portrait mode.
-					SensorManager.remapCoordinateSystem(R, SensorManager.AXIS_X, SensorManager.AXIS_Z, outR);
-					SensorManager.getOrientation(outR, orientation); 
-				}	
-
-				// Covert from radians to degrees.
-				double x180pi = 180.0 / Math.PI;
-
-
-				pitch = (float)(orientation[1] * x180pi);
-				roll = (float)(orientation[2] * x180pi);	
-				
-			
-				
-					float XAccel  = pitch; // pitch
-					float YAccel = roll; // roll
-					
 	
-
-					cont.updateShip(XAccel, YAccel);
-				}
 		
-
-			//Set sensor values as acceleration
-
-		}
-		protected float[] lowPass( float[] input, float[] output) {
-			if(output == null) return input;
-
-			for(int  i = 0; i < input.length; i++) {
-				output[i] = output[i] + ALPHA * (input[i] - output[i]);
-			}
-			return output;
-		}
-
-		@Override
-		public void onAccuracyChanged(Sensor sensor, int accuracy) {
-			// TODO Auto-generated method stub
-
-		}
-	};
 
 
 }
