@@ -184,6 +184,7 @@ public class Panel extends SurfaceView implements Callback  {
 			if ((posX >= rx1 && posX <= rx2) && (posY >= ry1 && posY <= ry2)) {
 				// we are in the square
 				//Toast.makeText(c, "hit ROTATE LEFT", Toast.LENGTH_SHORT).show();
+				cont.setAngle(-5);
 			} else {
 				// we are somewhere else on the canvas
 			}
@@ -202,7 +203,7 @@ public class Panel extends SurfaceView implements Callback  {
 			if ((posX >= crx1 && posX <= crx2) && (posY >= cry1 && posY <= cry2)) {
 				// we are in the square
 				//Toast.makeText(c, "hit ROTATE RIGHT", Toast.LENGTH_SHORT).show();
-				
+				cont.setAngle(5);
 				
 			} else {
 				// we are somewhere else on the canvas
@@ -214,7 +215,7 @@ public class Panel extends SurfaceView implements Callback  {
 		}
 
 		}
-		return true;
+		  return super.onTouchEvent(ev);
 	}
 
 
@@ -260,9 +261,6 @@ public class Panel extends SurfaceView implements Callback  {
 		shipBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.image_ship);
 
 		Matrix matrix = new Matrix();
-	
-	
-		cont.setAngle(20);
 		
 		
 		matrix.setRotate(cont.getAngle());
