@@ -43,11 +43,6 @@ public class AsteroidView extends Activity  {
 		return true;
 	}
 
-
-
-
-
-
 	final SensorEventListener sensorEventListener = new SensorEventListener(){
 		public void onSensorChanged(SensorEvent event) {
 

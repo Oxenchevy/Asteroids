@@ -49,6 +49,10 @@ public class Panel extends SurfaceView implements Callback  {
 
 	private Bitmap shipBitMap;
 	private Bitmap ballBitMap;
+	private Bitmap ClockwiseRotateBitMap;
+	private Bitmap CounterRotateBitMap;
+	private Bitmap fireBitMap;
+	private Bitmap space;
 
 	private ArrayList<Sprite> mSpriteList = new ArrayList<Sprite>();
 	private int mNumSprites;
@@ -104,6 +108,26 @@ public class Panel extends SurfaceView implements Callback  {
 		startLevel();
 
 	}
+	
+	public void drawbackground(Canvas canvas)
+	{
+	    space = BitmapFactory.decodeResource(getResources(), R.drawable.space);
+	    ClockwiseRotateBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotateclockwise);
+	    CounterRotateBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotatecounter);
+	    fireBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_fire);
+	    
+	    Bitmap resizedFirebitmap = Bitmap.createScaledBitmap(fireBitMap, fireBitMap.getWidth()/2, fireBitMap.getHeight()/2, true);
+	    Bitmap resizedClockwisebitmap = Bitmap.createScaledBitmap(ClockwiseRotateBitMap, ClockwiseRotateBitMap.getWidth()/2, ClockwiseRotateBitMap.getHeight()/2, true);
+	    Bitmap resizedCounterbitmap = Bitmap.createScaledBitmap(CounterRotateBitMap, CounterRotateBitMap.getWidth()/2, CounterRotateBitMap.getHeight()/2, true);
+	    
+	    
+		canvas.drawBitmap(space, -400,-400, null);			
+		canvas.drawBitmap(resizedClockwisebitmap, resizedClockwisebitmap.getWidth() + 15, canvas.getHeight() - resizedClockwisebitmap.getHeight()-5, null);
+		canvas.drawBitmap(resizedCounterbitmap, 5, canvas.getHeight() - resizedCounterbitmap.getHeight()-5, null);
+		canvas.drawBitmap(resizedFirebitmap, canvas.getWidth() - resizedFirebitmap.getWidth(),canvas.getHeight() - resizedFirebitmap.getHeight(), null);
+		
+
+	}
 
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
@@ -143,6 +167,8 @@ public class Panel extends SurfaceView implements Callback  {
 	}
 
 	public void draw(Canvas canvas, long elapsed) {
+	    ballBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.image_asteroid_small);
+	    shipBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.image_ship);
 
 	/*	canvas.drawColor(Color.BLACK);
 		synchronized (mSpriteList) {
@@ -150,6 +176,10 @@ public class Panel extends SurfaceView implements Callback  {
 				sprite.doDraw(canvas);
 			}
 		}*/
+		
+		
+
+		canvas.drawBitmap(shipBitMap,canvas.getWidth()/2,canvas.getHeight()/2, null);
 		
 	}
 
