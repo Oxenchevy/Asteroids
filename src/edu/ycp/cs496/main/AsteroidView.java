@@ -15,11 +15,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 public class AsteroidView extends Activity  {
 
-	SensorManager sensorManager;
-	Sensor accelerometer; 
-
-	int accelerometerSensor; 
-	int magnetometerSensor;
 
 	ShipController cont;
 
@@ -29,9 +24,9 @@ public class AsteroidView extends Activity  {
 		super.onCreate(savedInstanceState);
 
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE); 
+	
 		cont = new ShipController();
-		setContentView(new Panel(this, cont,sensorManager));
+		setContentView(new Panel(this, cont));
 	}
 
 

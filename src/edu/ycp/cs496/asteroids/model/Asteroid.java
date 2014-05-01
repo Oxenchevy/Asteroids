@@ -11,51 +11,62 @@ public class Asteroid {
 	private final int MAX_VELOCITY = 6;
 	private Location location;
 	//private Direction direction;
-	private int hitpoints, size, radius;
-	
+	private int hitpoints, size, radius, speed;
+
 	public Asteroid() {
 		location = new Location(0,0);
 		//direction.genRandomDirection();
-		
+
 		Random rand = new Random();
 		size = rand.nextInt(3)+1;
 		hitpoints = size;
 		radius = size;
+		
+		switch(size) {
+		case 1: speed = 3; break;
+		case 2: speed = 2; break;
+		case 3: speed = 1; break;
+		}
 	}
-	
+
 	public Asteroid(int size) {
 		location = new Location(0,0);
 		//direction.genRandomDirection();
 		this.size = size;
 		hitpoints = size;
 		radius = size;
+
+		switch(size) {
+		case 1: speed = 3; break;
+		case 2: speed = 2; break;
+		case 3: speed = 1; break;
+		}
 	}
-	
+
 	public Location getLocation() {
 		return location;
 	}
-	
+
 	/*public Direction getDirection() {
 		return direction;
 	}*/
-	
+
 	public int getHitpoints() {
 		return hitpoints;
 	}
-	
+
 	public void loseHitpoint() {
 		hitpoints--;
 	}
-	
+
 	public int getSize() {
 		return size;
 	}
-	
+
 	public int getRadius() {
 		return radius;
 	}
-	
-	// Collision detection
+
 	private void checkBoundary() {
 		// Left or right boundary
 		if (location.getX() <= 0) {
@@ -79,5 +90,5 @@ public class Asteroid {
 			location.setX( (int)Panel.mWidth - location.getX()) ;		
 		}
 	}
-	
+
 }

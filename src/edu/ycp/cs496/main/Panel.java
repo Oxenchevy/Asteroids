@@ -18,7 +18,10 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.view.Display;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
@@ -77,7 +80,7 @@ public class Panel extends SurfaceView implements Callback  {
 	// TODO: Add class fields
 
 	@SuppressLint("NewApi")
-	public Panel(Context context, ShipController cont, SensorManager senors) {
+	public Panel(Context context, ShipController cont) {
 		super(context);
 		// TODO: Initialize class fields
 
@@ -109,8 +112,8 @@ public class Panel extends SurfaceView implements Callback  {
 
 	public void drawbackground(Canvas canvas)
 	{
-		
-		
+
+
 		space = BitmapFactory.decodeResource(getResources(), R.drawable.space);
 		ClockwiseRotateBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotateclockwise);
 		CounterRotateBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotatecounter);
@@ -141,15 +144,12 @@ public class Panel extends SurfaceView implements Callback  {
 		counter_location_y = canvas.getHeight() - CounterRotateBitMap.getHeight()-5;
 
 	}
-
-	@Override
-	public boolean onTouchEvent(final MotionEvent ev) {
-		switch (ev.getAction()) {
-		case MotionEvent.ACTION_DOWN: {
-			// Code on finger down
-			float posX = ev.getX();
-			float posY = ev.getY();	
-
+	
+		public void buttonHits(float x, float y)
+		{
+			
+			float posX = x;
+			float posY = y;	
 			float fx1;
 			float fx2;
 			float fy1;
@@ -163,10 +163,9 @@ public class Panel extends SurfaceView implements Callback  {
 
 			if ((posX >= fx1 && posX <= fx2) && (posY >= fy1 && posY <= fy2)) {
 				// we are in the square
-				//Toast.makeText(c, "hit FIRE", Toast.LENGTH_SHORT).show();
-			} else {
-				// we are somewhere else on the canvas
-			}
+				Toast.makeText(c, "hit FIRE", Toast.LENGTH_SHORT).show();
+			
+			} 
 
 			// touch for the rotate right button
 
@@ -184,10 +183,10 @@ public class Panel extends SurfaceView implements Callback  {
 			if ((posX >= rx1 && posX <= rx2) && (posY >= ry1 && posY <= ry2)) {
 				// we are in the square
 				//Toast.makeText(c, "hit ROTATE LEFT", Toast.LENGTH_SHORT).show();
-				cont.setAngle(-5);
-			} else {
-				// we are somewhere else on the canvas
-			}
+				
+					cont.setAngle(-45);			
+			} 
+			
 
 			float crx1;
 			float crx2;
@@ -203,19 +202,58 @@ public class Panel extends SurfaceView implements Callback  {
 			if ((posX >= crx1 && posX <= crx2) && (posY >= cry1 && posY <= cry2)) {
 				// we are in the square
 				//Toast.makeText(c, "hit ROTATE RIGHT", Toast.LENGTH_SHORT).show();
-				cont.setAngle(5);
-				
-			} else {
-				// we are somewhere else on the canvas
-			}
+				cont.setAngle(45);
+				} 
+			
+			
+		}
+		
+		final Handler handler = new Handler(); 
+		Runnable mLongPressed = new Runnable() { 
+		    public void run() { 
+		        //Log.i("", "Long press!");
+		    	Toast.makeText(c, "let go of my button", Toast.LENGTH_SHORT).show();
+		    	 handler.postAtTime(this, SystemClock.uptimeMillis() + 
+		    			 100); 
+		    }   
+		};
 
+	@Override
+	public boolean onTouchEvent( MotionEvent ev) {
+		/*switch (ev.getAction()) {
+		case MotionEvent.ACTION_DOWN: {
+		
+		
+		 */ 
+		if(ev.getAction() == MotionEvent.ACTION_DOWN)
+			 handler.removeCallbacks(mLongPressed); 
+			handler.postAtTime(mLongPressed, 
+					SystemClock.uptimeMillis() + 100); 
+		    if((ev.getAction() == MotionEvent.ACTION_UP))
+		        handler.removeCallbacks(mLongPressed);
+		    return super.onTouchEvent(ev);
+/*
+		float posX = ev.getX();
+		float posY = ev.getY();	
+
+		  switch(ev.getAction()) {
+	        case MotionEvent.ACTION_DOWN:
+	        {
+	        	
+	        	buttonHits(posX,posY);			
 			//Toast.makeText(c, "pos X = " + posX + " pos Y = " + posY, Toast.LENGTH_SHORT).show();
+	        }
+	        case  MotionEvent.ACTION_MOVE:
+        	{
+        	  	buttonHits(posX,posY);	
+        	}
+	        case MotionEvent.ACTION_UP:
+	            // No longer down
+	      //Toast.makeText(c, "let go of my button", Toast.LENGTH_SHORT).show();
+	          	buttonHits(posX,posY);
 
-			break;
-		}
-
-		}
-		  return super.onTouchEvent(ev);
+	        }
+		return super.onTouchEvent(ev);*/
 	}
 
 
@@ -261,12 +299,12 @@ public class Panel extends SurfaceView implements Callback  {
 		shipBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.image_ship);
 
 		Matrix matrix = new Matrix();
-		
-		
+
+
 		matrix.setRotate(cont.getAngle());
 
-		 // recreate the new Bitmap
-		 Bitmap resizedBitmap = Bitmap.createBitmap(shipBitMap,0, 0, shipBitMap.getWidth(), shipBitMap.getHeight(), matrix, true); 
+		// recreate the new Bitmap
+		Bitmap resizedBitmap = Bitmap.createBitmap(shipBitMap,0, 0, shipBitMap.getWidth(), shipBitMap.getHeight(), matrix, true); 
 		canvas.drawBitmap(resizedBitmap,canvas.getWidth()/2,canvas.getHeight()/2, null);
 
 	}
@@ -282,8 +320,8 @@ public class Panel extends SurfaceView implements Callback  {
 		return (float) Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
 	}
 
-	
-		
+
+
 
 
 }
