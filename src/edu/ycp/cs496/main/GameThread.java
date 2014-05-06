@@ -44,6 +44,7 @@ public class GameThread extends Thread {
 			try{
 				canvas = this.mHolder.lockCanvas();
 				synchronized (mHolder) {
+				 
 
 
 					mStartTime = System.currentTimeMillis();
@@ -77,6 +78,7 @@ public class GameThread extends Thread {
 				// in case of an exception the surface is not left in 
 				// an inconsistent state
 				if (canvas != null) {
+				
 					mHolder.unlockCanvasAndPost(canvas);
 				}
 

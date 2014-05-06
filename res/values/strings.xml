@@ -6,6 +6,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_leaderboard">LeaderboardActivity</string>
     <string name="title_activity_asteroids_temp">AsteroidsTemp</string>
-    <string name="title_activity_menu">MenuActivity</string>
+    <string name="title_activity_menu">Asteroids</string>
 
 </resources>

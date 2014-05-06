@@ -37,6 +37,8 @@ public class Panel extends SurfaceView implements Callback  {
 	private GameThread thread; 
 	private Game game; 
 
+	private boolean isRunning;
+
 	private Bitmap shipBitMap;
 	private Bitmap ballBitMap;
 	private Bitmap cRotate;
@@ -110,7 +112,7 @@ public class Panel extends SurfaceView implements Callback  {
 
 		//Make the Panel focusable so it can handle events
 		setFocusable(true);
-
+		isRunning=false;
 
 		rotate = false; 
 
@@ -235,12 +237,13 @@ public class Panel extends SurfaceView implements Callback  {
 	public void drawBackground(Canvas canvas){
 
 		//Draw Background
-		canvas.drawBitmap(space, 0, 0, new Paint());
-		
+		if (isRunning)
+			canvas.drawBitmap(space, 0, 0, new Paint());
+
 	}
-	
+
 	public void drawButtons(Canvas canvas){
-		
+
 		//Draw Buttons
 		canvas.drawBitmap(cRotate, clockwiseX, clockwiseY, new Paint());
 		canvas.drawBitmap(ccRotate, counterX, counterY, new Paint());
@@ -249,37 +252,38 @@ public class Panel extends SurfaceView implements Callback  {
 	}
 
 	public void render(Canvas canvas) {
-		drawBackground(canvas); 
-
-		if(rotate){
-			canvas.drawBitmap(RotateBitmap(shipBitMap, cont.getRotation()), mWidth/2 - (shipBitMap.getWidth()/2), mHeight/2 - (shipBitMap.getHeight()/2), new Paint());
-		}
-
-		Paint paint = new Paint(); 
-		paint.setColor(Color.RED); 
-		for(int i = 0; i < projectiles.length; i++){
-			canvas.drawCircle(((Projectile) projectiles[i]).getX(), ((Projectile) projectiles[i]).getY(), ((Projectile) projectiles[i]).getRadius(), paint); 
-		}
-
-		for(int i = 0; i < Asteroidcont.getAsteroidList().length; i++){
-			int size = ((Asteroid) asteroids[i]).getSize();
-			
-			if(size == 1){
-				canvas.drawBitmap(asteroidSmall, ((Asteroid) asteroids[i]).getLocation().getX(), ((Asteroid) asteroids[i]).getLocation().getY(),  new Paint());
+		if (isRunning)
+		{
+			drawBackground(canvas);
+			if(rotate){
+				canvas.drawBitmap(RotateBitmap(shipBitMap, cont.getRotation()), mWidth/2 - (shipBitMap.getWidth()/2), mHeight/2 - (shipBitMap.getHeight()/2), new Paint());
 			}
-			
-			else if(size == 2){
-				canvas.drawBitmap(asteroidMedium, ((Asteroid) asteroids[i]).getLocation().getX(), ((Asteroid) asteroids[i]).getLocation().getY(),  new Paint());
-			}
-			
-			else{
-				canvas.drawBitmap(asteroidLarge, ((Asteroid) asteroids[i]).getLocation().getX(), ((Asteroid) asteroids[i]).getLocation().getY(),  new Paint());
-			}
-			
-		}
-		
-		drawButtons(canvas); 
 
+			Paint paint = new Paint(); 
+			paint.setColor(Color.RED); 
+			for(int i = 0; i < projectiles.length; i++){
+				canvas.drawCircle(((Projectile) projectiles[i]).getX(), ((Projectile) projectiles[i]).getY(), ((Projectile) projectiles[i]).getRadius(), paint); 
+			}
+
+			for(int i = 0; i < Asteroidcont.getAsteroidList().length; i++){
+				int size = ((Asteroid) asteroids[i]).getSize();
+
+				if(size == 1){
+					canvas.drawBitmap(asteroidSmall, ((Asteroid) asteroids[i]).getLocation().getX(), ((Asteroid) asteroids[i]).getLocation().getY(),  new Paint());
+				}
+
+				else if(size == 2){
+					canvas.drawBitmap(asteroidMedium, ((Asteroid) asteroids[i]).getLocation().getX(), ((Asteroid) asteroids[i]).getLocation().getY(),  new Paint());
+				}
+
+				else{
+					canvas.drawBitmap(asteroidLarge, ((Asteroid) asteroids[i]).getLocation().getX(), ((Asteroid) asteroids[i]).getLocation().getY(),  new Paint());
+				}
+
+			}
+
+			drawButtons(canvas); 
+		}
 	}
 
 
@@ -307,7 +311,7 @@ public class Panel extends SurfaceView implements Callback  {
 
 		cont.updateProjectiles(mWidth, mHeight); 
 		projectiles = cont.getProjectileCoords(); 
-		
+
 		Asteroidcont.update(cont.getLevel());
 		asteroids = Asteroidcont.getAsteroidList(); 
 
@@ -322,6 +326,7 @@ public class Panel extends SurfaceView implements Callback  {
 	public void surfaceCreated(SurfaceHolder holder) {
 		// at this point the surface is created and
 		// we can safely start the game loop
+		isRunning = true;
 		thread.setRunning(true);
 		thread.start();
 
@@ -333,9 +338,11 @@ public class Panel extends SurfaceView implements Callback  {
 		// tell the thread to shut down and wait for it to finish
 		// this is a clean shutdown
 		boolean retry = true;
+		isRunning = false;
 		while (retry) {
 			try {
 				thread.join();
+				
 				retry = false;
 			} catch (InterruptedException e) {
 				// try again shutting down the thread
