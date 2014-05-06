@@ -2,30 +2,37 @@ package edu.ycp.cs496.asteroids.model;
 
 import java.util.Random;
 
+import android.graphics.Path.Direction;
 import edu.ycp.cs496.main.Panel;
 
 public class Asteroid {
 
 	private final int MAX_VELOCITY = 6;
 	private Location location;
-	//private Direction direction;
+	private float dx, dy; 
 	private int hitpoints, size, radius, speed;
-
+	private float theta; 
+	
 	// Constructor for asteroids with random attributes.
-	public Asteroid() {
+	public Asteroid(int smallWidth, int medWidth, int largeWidth) {
 		location = new Location(0,0);
 		//direction.genRandomDirection();
 
 		Random rand = new Random();
 		size = rand.nextInt(3)+1;
 		hitpoints = size;
-		radius = size;
-
+		
+		
 		switch(size) {
-		case 1: speed = 3; break;
-		case 2: speed = 2; break;
-		case 3: speed = 1; break;
+		case 1: speed = 5; radius = smallWidth/2; break;
+		case 2: speed = 3; radius = medWidth/2; break;
+		case 3: speed = 1; radius = largeWidth/2; break;
 		}
+		
+		theta = rand.nextInt(360); 
+		
+		dx = (float) Math.sin(Math.toRadians(theta)) * speed;
+        dy = -(float) Math.cos(Math.toRadians(theta)) * speed;
 		
 		int locgen = rand.nextInt(4)+1;
 		
@@ -54,7 +61,7 @@ public class Asteroid {
 		this.location = location;
 		//direction.genRandomDirection();
 		this.size = size;
-		hitpoints = size;
+		hitpoints = size * 2;
 		radius = size;
 
 		switch(size) {
@@ -68,9 +75,13 @@ public class Asteroid {
 		return location;
 	}
 
-	/*public Direction getDirection() {
-		return direction;
-	}*/
+	public void updateLocation(){
+		int x = location.getX();
+		int y = location.getY(); 
+		
+		location.setX(x + (int)dx);
+		location.setY(y + (int)dy);
+	}
 
 	public int getHitpoints() {
 		return hitpoints;
@@ -93,6 +104,16 @@ public class Asteroid {
 			return true;
 		else 
 			return false;
+	}
+	
+	public float getDx(){
+		
+		return dx; 
+	}
+	
+	public float getDy(){
+		
+		return dy; 
 	}
 	
 	public void checkBoundary() {

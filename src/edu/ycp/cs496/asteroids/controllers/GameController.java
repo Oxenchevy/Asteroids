@@ -34,9 +34,12 @@ public class GameController {
 	}
 	
 	public Object[] getProjectileCoords(){
-		 
+		
 		return game.getShip().getProjectiles(); 
+	}
 	
+	public int getLevel(){
+		return game.getLevel(); 
 	}
 	
 	
