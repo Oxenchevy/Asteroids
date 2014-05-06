@@ -37,10 +37,9 @@ public class Panel extends SurfaceView implements Callback  {
 	private GameThread thread; 
 	private Game game; 
 
-	private boolean isRunning;
+
 
 	private Bitmap shipBitMap;
-	private Bitmap ballBitMap;
 	private Bitmap cRotate;
 	private Bitmap ccRotate;
 	private Bitmap fire;
@@ -80,6 +79,12 @@ public class Panel extends SurfaceView implements Callback  {
 
 		// create the game loop thread
 		thread = new GameThread(getHolder(), this);
+		thread.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+
+	        public void uncaughtException(Thread t, Throwable e) {
+	         //  System.out.println(t + " throws exception: " + e);
+	        }
+	     });
 
 		//Get Screen Dimensions
 		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -112,8 +117,7 @@ public class Panel extends SurfaceView implements Callback  {
 
 		//Make the Panel focusable so it can handle events
 		setFocusable(true);
-		isRunning=false;
-
+	
 		rotate = false; 
 
 		//Set button locations
@@ -124,14 +128,11 @@ public class Panel extends SurfaceView implements Callback  {
 		fireX = mWidth - fire.getWidth(); 
 		fireY = mHeight - fire.getHeight(); 
 		fireTime = System.currentTimeMillis(); 
-
-
 	}
-
-
 
 	@Override
 	public boolean onTouchEvent(MotionEvent ev){
+
 
 		float x = ev.getX(); 
 		float y = ev.getY(); 
@@ -148,7 +149,7 @@ public class Panel extends SurfaceView implements Callback  {
 		}
 
 		if(buttonHits(x, y) == ButtonType.FIRE){
-			Log.d(TAG, "FIRE!"); 
+			//Log.d(TAG, "FIRE!"); 
 			button = ButtonType.FIRE;
 			fire(); 
 		}
@@ -162,7 +163,7 @@ public class Panel extends SurfaceView implements Callback  {
 		if(ev.getAction() == MotionEvent.ACTION_UP){
 			rotate = false;
 			button = ButtonType.NONE;
-			Log.d(TAG, "UP!"); 
+			//Log.d(TAG, "UP!"); 
 		}
 		return true; 
 
@@ -237,7 +238,7 @@ public class Panel extends SurfaceView implements Callback  {
 	public void drawBackground(Canvas canvas){
 
 		//Draw Background
-		if (isRunning)
+		
 			canvas.drawBitmap(space, 0, 0, new Paint());
 
 	}
@@ -252,8 +253,7 @@ public class Panel extends SurfaceView implements Callback  {
 	}
 
 	public void render(Canvas canvas) {
-		if (isRunning)
-		{
+		
 			drawBackground(canvas);
 			if(rotate){
 				canvas.drawBitmap(RotateBitmap(shipBitMap, cont.getRotation()), mWidth/2 - (shipBitMap.getWidth()/2), mHeight/2 - (shipBitMap.getHeight()/2), new Paint());
@@ -284,8 +284,7 @@ public class Panel extends SurfaceView implements Callback  {
 
 			drawButtons(canvas); 
 		}
-	}
-
+	
 
 
 	public static Bitmap RotateBitmap(Bitmap source, float angle)
@@ -326,7 +325,7 @@ public class Panel extends SurfaceView implements Callback  {
 	public void surfaceCreated(SurfaceHolder holder) {
 		// at this point the surface is created and
 		// we can safely start the game loop
-		isRunning = true;
+	
 		thread.setRunning(true);
 		thread.start();
 
@@ -334,11 +333,12 @@ public class Panel extends SurfaceView implements Callback  {
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		Log.d(TAG, "Surface is being destroyed");
+		///Log.d(TAG, "Surface is being destroyed");
 		// tell the thread to shut down and wait for it to finish
 		// this is a clean shutdown
 		boolean retry = true;
-		isRunning = false;
+
+
 		while (retry) {
 			try {
 				thread.join();
