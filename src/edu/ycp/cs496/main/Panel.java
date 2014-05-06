@@ -1,10 +1,11 @@
 package edu.ycp.cs496.main;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
-import edu.ycp.cs496.asteroids.controllers.ShipController;
+import java.util.List;
+
+import edu.ycp.cs496.asteroids.controllers.GameController;
+import edu.ycp.cs496.asteroids.model.Game;
+import edu.ycp.cs496.asteroids.model.Projectile;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -14,314 +15,292 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
-import android.os.Handler;
-import android.os.SystemClock;
+import android.media.MediaPlayer;
+import android.util.Log;
 import android.view.Display;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.Toast;
+import android.widget.ImageView;
+
 
 
 public class Panel extends SurfaceView implements Callback  {
-	public static float mWidth;
-	public static float mHeight;
-
-
-	int width;
-	int height;
-
-	Paint paint;
-	Context c;
-	float x;
-	float y;
-
-	float roll;
-	float pitch;
-	/////////////////////////////
-	int fire_location_x;
-	int fire_location_y;
-	int clockwise_location_x;
-	int clockwise_location_y;
-	int counter_location_x;
-	int counter_location_y;
-
-	int angle;
-	///////////////////////////
-	private static final float ALPHA = 0.25f;
-	Canvas Canvas;
-
-	private ViewThread mThread;
+	public static int mWidth;
+	public static int mHeight;
+	private MediaPlayer mediaPlayer; 
+	private static final String TAG = Panel.class.getSimpleName();
+	private GameThread thread; 
+	private Game game; 
 
 	private Bitmap shipBitMap;
 	private Bitmap ballBitMap;
-	private Bitmap ClockwiseRotateBitMap;
-	private Bitmap CounterRotateBitMap;
-	private Bitmap fireBitMap;
+	private Bitmap cRotate;
+	private Bitmap ccRotate;
+	private Bitmap fire;
 	private Bitmap space;
 
 
-	private int mNumSprites;
-	private Paint mPaint;
-
-
-
-
-	public ShipController cont;
-
+	private GameController cont;
+	
+	private float dThetaR = 10.0f;
+	private float dThetaL = 10.0f; 
+	private boolean rotate; 
+	private int clockwiseX; 
+	private int clockwiseY; 
+	private int fireX; 
+	private int fireY; 
+	private int counterX; 
+	private int counterY; 
+	private static final int BUFFER = 100;
+	private float pressure; 
+	private long fireTime; 
+	private ButtonType button;
+	private Object[] projectiles; 
 	// TODO: Add class fields
 
 	@SuppressLint("NewApi")
-	public Panel(Context context, ShipController cont) {
+	public Panel(Context context) {
 		super(context);
 		// TODO: Initialize class fields
 
 		getHolder().addCallback(this);
-		mPaint = new Paint();
-		mThread = new ViewThread(this);     
-		angle = 0;
 
-		c = context;
-		paint = new Paint();
 
-		paint.setAntiAlias(true);
-		x = 100.0f;
-		y = 100.0f;
+		// create the game loop thread
+		thread = new GameThread(getHolder(), this);
 
-		this.cont = cont;
-
+		//Get Screen Dimensions
 		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 		Display display = wm.getDefaultDisplay();
-		Point size = new Point();
-		display.getSize(size);
-		width = size.x;
-		height = size.y;
+		Point size = new Point(); 
+		display.getSize(size); 
+		mWidth = size.x; 
+		mHeight = size.y; 
 
 
-		startLevel();
-
-	}
-
-	public void drawbackground(Canvas canvas)
-	{
-
-
+		//Initialize Bitmaps
 		space = BitmapFactory.decodeResource(getResources(), R.drawable.space);
-		ClockwiseRotateBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotateclockwise);
-		CounterRotateBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotatecounter);
-		fireBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_fire);
+		space = Bitmap.createScaledBitmap(space, mWidth, mHeight, true);
+		cRotate = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotateclockwise);
+		ccRotate = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotatecounter);
+		fire = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_fire);
+		shipBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.image_ship);
+		shipBitMap = Bitmap.createScaledBitmap(shipBitMap, shipBitMap.getWidth() * 2, shipBitMap.getHeight() * 2, true); 
 
-		Bitmap resizedFirebitmap = Bitmap.createScaledBitmap(fireBitMap, fireBitMap.getWidth()/2, fireBitMap.getHeight()/2, true);
-		Bitmap resizedClockwisebitmap = Bitmap.createScaledBitmap(ClockwiseRotateBitMap, ClockwiseRotateBitMap.getWidth()/2, ClockwiseRotateBitMap.getHeight()/2, true);
-		Bitmap resizedCounterbitmap = Bitmap.createScaledBitmap(CounterRotateBitMap, CounterRotateBitMap.getWidth()/2, CounterRotateBitMap.getHeight()/2, true);
+		//Create Models and Controllers
+		game = new Game(mWidth, mHeight); 
+		cont = new GameController(game); 
 
+		//Make the Panel focusable so it can handle events
+		setFocusable(true);
 
+	
+		rotate = false; 
 
-		fireBitMap = resizedFirebitmap;
-		CounterRotateBitMap = resizedCounterbitmap;
-		ClockwiseRotateBitMap = resizedClockwisebitmap;
-
-
-
-		canvas.drawBitmap(space, -400,-400, null);			
-		canvas.drawBitmap(ClockwiseRotateBitMap, ClockwiseRotateBitMap.getWidth() + 15, canvas.getHeight() - ClockwiseRotateBitMap.getHeight()-5, null);
-		canvas.drawBitmap(CounterRotateBitMap, 5, canvas.getHeight() - CounterRotateBitMap.getHeight()-5, null);
-		canvas.drawBitmap(fireBitMap, canvas.getWidth() - fireBitMap.getWidth(),canvas.getHeight() - fireBitMap.getHeight(), null);
-
-		fire_location_x = canvas.getWidth() - fireBitMap.getWidth();  
-		fire_location_y = canvas.getHeight() - fireBitMap.getHeight(); 
-		clockwise_location_x = ClockwiseRotateBitMap.getWidth() + 15;
-		clockwise_location_y = canvas.getHeight() - ClockwiseRotateBitMap.getHeight()-5;
-		counter_location_x = 5;
-		counter_location_y = canvas.getHeight() - CounterRotateBitMap.getHeight()-5;
-
+		//Set button locations
+		clockwiseX = cRotate.getWidth() + 150; 
+		clockwiseY = mHeight - cRotate.getHeight()-5; 
+		counterX = 50; 
+		counterY = mHeight - ccRotate.getHeight() - 5; 
+		fireX = mWidth - fire.getWidth(); 
+		fireY = mHeight - fire.getHeight(); 
+		fireTime = System.currentTimeMillis(); 
+		
+		
+        
 	}
 	
-		public void buttonHits(float x, float y)
-		{
-			
-			float posX = x;
-			float posY = y;	
-			float fx1;
-			float fx2;
-			float fy1;
-			float fy2;
-
-			// touch for the fire button
-			fx1 = fire_location_x-10;
-			fx2 = fire_location_x+100;			 
-			fy1 = fire_location_y;
-			fy2 =  fire_location_y+100;
-
-			if ((posX >= fx1 && posX <= fx2) && (posY >= fy1 && posY <= fy2)) {
-				// we are in the square
-				Toast.makeText(c, "hit FIRE", Toast.LENGTH_SHORT).show();
-			
-			} 
-
-			// touch for the rotate right button
-
-			float rx1;
-			float rx2;
-			float ry1;
-			float ry2;
-
-			rx1 = counter_location_x-20;
-			rx2 = counter_location_x+60;
-
-			ry1 = counter_location_y;
-			ry2 =  counter_location_y+100;
-
-			if ((posX >= rx1 && posX <= rx2) && (posY >= ry1 && posY <= ry2)) {
-				// we are in the square
-				//Toast.makeText(c, "hit ROTATE LEFT", Toast.LENGTH_SHORT).show();
-				
-					cont.setAngle(-45);			
-			} 
-			
-
-			float crx1;
-			float crx2;
-			float cry1;
-			float cry2;
-
-			crx1 = clockwise_location_x-20;
-			crx2 = clockwise_location_x+60;			 
-			cry1 = clockwise_location_y;
-			cry2 =  clockwise_location_y+100;
-
-
-			if ((posX >= crx1 && posX <= crx2) && (posY >= cry1 && posY <= cry2)) {
-				// we are in the square
-				//Toast.makeText(c, "hit ROTATE RIGHT", Toast.LENGTH_SHORT).show();
-				cont.setAngle(45);
-				} 
-			
-			
-		}
-		
-		final Handler handler = new Handler(); 
-		Runnable mLongPressed = new Runnable() { 
-		    public void run() { 
-		        //Log.i("", "Long press!");
-		    	Toast.makeText(c, "let go of my button", Toast.LENGTH_SHORT).show();
-		    	 handler.postAtTime(this, SystemClock.uptimeMillis() + 
-		    			 100); 
-		    }   
-		};
+	
 
 	@Override
-	public boolean onTouchEvent( MotionEvent ev) {
-		/*switch (ev.getAction()) {
-		case MotionEvent.ACTION_DOWN: {
+	public boolean onTouchEvent(MotionEvent ev){
+		 
+		float x = ev.getX(); 
+		float y = ev.getY(); 
+		pressure = 1; //ev.getPressure() * 2; 
 		
-		
-		 */ 
-		if(ev.getAction() == MotionEvent.ACTION_DOWN)
-			 handler.removeCallbacks(mLongPressed); 
-			handler.postAtTime(mLongPressed, 
-					SystemClock.uptimeMillis() + 100); 
-		    if((ev.getAction() == MotionEvent.ACTION_UP))
-		        handler.removeCallbacks(mLongPressed);
-		    return super.onTouchEvent(ev);
-/*
-		float posX = ev.getX();
-		float posY = ev.getY();	
+		if(buttonHits(x, y) == ButtonType.CLOCKWISE){
+			rotate = true;
+			button = ButtonType.CLOCKWISE; 
+		}
 
-		  switch(ev.getAction()) {
-	        case MotionEvent.ACTION_DOWN:
-	        {
-	        	
-	        	buttonHits(posX,posY);			
-			//Toast.makeText(c, "pos X = " + posX + " pos Y = " + posY, Toast.LENGTH_SHORT).show();
-	        }
-	        case  MotionEvent.ACTION_MOVE:
-        	{
-        	  	buttonHits(posX,posY);	
-        	}
-	        case MotionEvent.ACTION_UP:
-	            // No longer down
-	      //Toast.makeText(c, "let go of my button", Toast.LENGTH_SHORT).show();
-	          	buttonHits(posX,posY);
+		if(buttonHits(x, y) == ButtonType.COUNTERCLOCKWISE){
+			rotate = true; 
+			button = ButtonType.COUNTERCLOCKWISE;
+		}
 
-	        }
-		return super.onTouchEvent(ev);*/
+		if(buttonHits(x, y) == ButtonType.FIRE){
+			Log.d(TAG, "FIRE!"); 
+			button = ButtonType.FIRE;
+			fire(); 
+		}
+
+		if(buttonHits(x, y) == ButtonType.NONE){
+			//Log.d(TAG, "BLEH"); 
+			button = ButtonType.NONE;
+		}
+
+
+		if(ev.getAction() == MotionEvent.ACTION_UP){
+			rotate = false;
+			button = ButtonType.NONE;
+			Log.d(TAG, "UP!"); 
+		}
+		return true; 
+
 	}
 
 
+
+	public ButtonType buttonHits(float x, float y)
+	{
+		float fx1;
+		float fx2;
+		float fy1;
+		float fy2;
+
+		// touch for the fire button
+		fx1 = fireX - BUFFER;
+		fx2 = fireX + fire.getWidth() + BUFFER;			 
+		fy1 = fireY;
+		fy2 =  fireY + fire.getHeight();
+
+		if ((x >= fx1 && x <= fx2) && (y >= fy1 && y <= fy2)) {
+
+			return ButtonType.FIRE; 
+		} 
+
+		// touch for the rotate right button
+
+		float rx1;
+		float rx2;
+		float ry1;
+		float ry2;
+
+		rx1 = counterX - BUFFER;
+		rx2 = counterX + BUFFER;
+
+		ry1 = counterY;
+		ry2 =  counterY + ccRotate.getHeight();
+
+		if ((x >= rx1 && x <= rx2) && (y >= ry1 && y <= ry2)) {
+
+			return ButtonType.COUNTERCLOCKWISE; 
+		} 
+
+
+		float crx1;
+		float crx2;
+		float cry1;
+		float cry2;
+
+		crx1 = clockwiseX - BUFFER;
+		crx2 = clockwiseX + BUFFER;			 
+		cry1 = clockwiseY;
+		cry2 =  clockwiseY + cRotate.getHeight();
+
+
+		if ((x >= crx1 && x <= crx2) && (y >= cry1 && y <= cry2)) {
+
+			return ButtonType.CLOCKWISE; 
+		}
+
+		return ButtonType.NONE;
+	}
+	
+	public void fire(){
+		if(System.currentTimeMillis() - fireTime > 100){
+			cont.fire(mHeight, mWidth); 
+		}
+		
+		fireTime = System.currentTimeMillis(); 
+	}
+	public void drawStartGame(Canvas canvas){
+
+		//Draw bitmaps
+		canvas.drawBitmap(space, 0, 0, new Paint());
+		canvas.drawBitmap(cRotate, clockwiseX, clockwiseY, new Paint());
+		canvas.drawBitmap(ccRotate, counterX, counterY, new Paint());
+		canvas.drawBitmap(fire, fireX, fireY, new Paint());
+		canvas.drawBitmap(RotateBitmap(shipBitMap, cont.getRotation()), mWidth/2, mHeight/2, new Paint());
+	}
+	
+	public void render(Canvas canvas) {
+		drawStartGame(canvas); 
+		
+		if(rotate){
+			canvas.drawBitmap(RotateBitmap(shipBitMap, cont.getRotation()), mWidth/2, mHeight/2, new Paint());
+		}
+		
+		Paint paint = new Paint(); 
+		paint.setColor(Color.RED); 
+		for(int i = 0; i < projectiles.length; i++){
+			canvas.drawCircle(((Projectile) projectiles[i]).getX(), ((Projectile) projectiles[i]).getY(), ((Projectile) projectiles[i]).getRadius(), paint); 
+		}
+		
+	}
+	
+	public static Bitmap RotateBitmap(Bitmap source, float angle)
+	{
+		Matrix matrix = new Matrix();
+		matrix.postTranslate(0 , 0); 
+		matrix.postRotate(angle);
+		matrix.postTranslate(mWidth/2, mHeight/2); 
+		return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+	}
+
+
+	public void update() {
+		
+		if(button == ButtonType.CLOCKWISE){
+			cont.rotateShip(dThetaR * pressure); 
+		}
+		
+		else if(button == ButtonType.COUNTERCLOCKWISE){
+			cont.rotateShip(-dThetaL * pressure); 
+		}
+		
+		
+			cont.updateProjectiles(mWidth, mHeight); 
+			projectiles = cont.getProjectileCoords(); 
+		
+	}
+
+	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
-		// TODO Auto-generated method stub
-		mWidth = width;
-		mHeight = height;
 	}
 
+	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
-		// Create and start new thread
-		if (!mThread.isAlive()) {
-			mThread = new ViewThread(this);
-			mThread.setRunning(true);
-			mThread.start();
-		}
+		// at this point the surface is created and
+		// we can safely start the game loop
+		thread.setRunning(true);
+		thread.start();
+		
 	}
 
-	public void startLevel()
-	{
-		int level = 3;
-		Random rand = new Random();
-
-		for (int i = 0; i < level; i++){			
-			/*	synchronized (mSpriteList) {
-				x = rand.nextInt(width) + 1;
-				mSpriteList.add(new Sprite(getResources(), (int)x, (int)y, cont));
-				mNumSprites = mSpriteList.size();
-			}*/
-		}
-	}
-
+	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		// Stop thread
-		if (mThread.isAlive()) {
-			mThread.setRunning(false);
+		Log.d(TAG, "Surface is being destroyed");
+		// tell the thread to shut down and wait for it to finish
+		// this is a clean shutdown
+		boolean retry = true;
+		while (retry) {
+			try {
+				thread.join();
+				retry = false;
+			} catch (InterruptedException e) {
+				// try again shutting down the thread
+			}
 		}
+		Log.d(TAG, "Thread was shut down cleanly");
 	}
 
-	public void draw(Canvas canvas, long elapsed) {
-		ballBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.image_asteroid_small);
-		shipBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.image_ship);
-
-		Matrix matrix = new Matrix();
-
-
-		matrix.setRotate(cont.getAngle());
-
-		// recreate the new Bitmap
-		Bitmap resizedBitmap = Bitmap.createBitmap(shipBitMap,0, 0, shipBitMap.getWidth(), shipBitMap.getHeight(), matrix, true); 
-		canvas.drawBitmap(resizedBitmap,canvas.getWidth()/2,canvas.getHeight()/2, null);
-
-	}
-
-
-	private boolean checkGameEnd() {
-		// TODO: Check if ball is within hole region
-
-		return false;
-	}
-
-	private float distance(float x1, float y1, float x2, float y2) {
-		return (float) Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
-	}
-
-
-
-
-
+	private static enum ButtonType{
+		CLOCKWISE, COUNTERCLOCKWISE, FIRE, NONE
+	}; 
 }

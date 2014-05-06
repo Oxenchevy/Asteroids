@@ -30,6 +30,6 @@ public interface IDatabase {
 	
 	public void deleteUser(User u); 
 	
-	public void cleanLeaderboard(); 
+	public void cleanLeaderboard();
 	
 }

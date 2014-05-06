@@ -1,6 +1,6 @@
 package edu.ycp.cs496.main;
 
-import edu.ycp.cs496.asteroids.controllers.ShipController;
+
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.app.Activity;
@@ -16,7 +16,7 @@ import android.hardware.SensorManager;
 public class AsteroidView extends Activity  {
 
 
-	ShipController cont;
+	
 
 	/** Called when the activity is first created. */
 	@Override
@@ -25,8 +25,8 @@ public class AsteroidView extends Activity  {
 
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 	
-		cont = new ShipController();
-		setContentView(new Panel(this, cont));
+		
+		setContentView(new Panel(this));
 	}
 
 

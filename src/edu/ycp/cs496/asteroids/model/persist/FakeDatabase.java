@@ -7,6 +7,7 @@ import edu.ycp.cs496.asteroids.model.User;
 
 
 
+
 /**
  * Implementation of the {@link IDatabase} interface that stores
  * objects using in-memory data structures.  It doesn't
@@ -18,6 +19,12 @@ public class FakeDatabase implements IDatabase{
 	
 	public FakeDatabase() {
 		leaderboard = new ArrayList<User>();
+		
+		User testUser = new User(); 
+		testUser.setName("DSA"); 
+		testUser.setScore(1005); 
+		
+		leaderboard.add(testUser); 
 	}
 	
 	@Override
@@ -28,6 +35,8 @@ public class FakeDatabase implements IDatabase{
 				return new User(user.getName(), user.getScore());
 			}
 		}
+		
+		
 		
 		// no such item
 		return null;
@@ -57,7 +66,10 @@ public class FakeDatabase implements IDatabase{
 	@Override
 	public List<User> getLeaderboard() {
 		// TODO Auto-generated method stub
-		return leaderboard; 
+		return new ArrayList<User>(leaderboard); 
 	}
+
+
+	
 	
 }
