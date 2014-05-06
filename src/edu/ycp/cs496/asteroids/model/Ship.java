@@ -94,10 +94,16 @@ public class Ship extends User {
 		
 		for(int i = 0; i < tempArray.length; i++){
 			if(((Projectile) tempArray[i]).getX() < 0 || ((Projectile) tempArray[i]).getX() > width){
+				if(tempArray.length == 0){
+					break; 
+				}
 				projectiles.remove(i); 
 			}
 			
 			if(((Projectile) tempArray[i]).getY() < 0 || ((Projectile) tempArray[i]).getY() > height){
+				if(tempArray.length == 0){
+					break; 
+				}
 				projectiles.remove(i); 
 			}
 			

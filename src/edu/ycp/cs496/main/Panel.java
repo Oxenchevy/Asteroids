@@ -232,10 +232,16 @@ public class Panel extends SurfaceView implements Callback  {
 		fireTime = System.currentTimeMillis(); 
 	}
 
-	public void drawStartGame(Canvas canvas){
+	public void drawBackground(Canvas canvas){
 
-		//Draw bitmaps
+		//Draw Background
 		canvas.drawBitmap(space, 0, 0, new Paint());
+		
+	}
+	
+	public void drawButtons(Canvas canvas){
+		
+		//Draw Buttons
 		canvas.drawBitmap(cRotate, clockwiseX, clockwiseY, new Paint());
 		canvas.drawBitmap(ccRotate, counterX, counterY, new Paint());
 		canvas.drawBitmap(fire, fireX, fireY, new Paint());
@@ -243,7 +249,7 @@ public class Panel extends SurfaceView implements Callback  {
 	}
 
 	public void render(Canvas canvas) {
-		drawStartGame(canvas); 
+		drawBackground(canvas); 
 
 		if(rotate){
 			canvas.drawBitmap(RotateBitmap(shipBitMap, cont.getRotation()), mWidth/2 - (shipBitMap.getWidth()/2), mHeight/2 - (shipBitMap.getHeight()/2), new Paint());
@@ -271,6 +277,8 @@ public class Panel extends SurfaceView implements Callback  {
 			}
 			
 		}
+		
+		drawButtons(canvas); 
 
 	}
 
