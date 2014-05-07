@@ -8,77 +8,80 @@ import edu.ycp.cs496.asteroids.model.Asteroid;
 import edu.ycp.cs496.asteroids.model.Game;
 import edu.ycp.cs496.asteroids.model.Location;
 import edu.ycp.cs496.asteroids.model.Projectile;
+import edu.ycp.cs496.main.Panel;
 
 public class GameController {
 	private Game game; 
 	private ArrayList<Point> bullets; 
 	private List<Asteroid> asteroids;
 	private GameController gc; 
+	private Asteroid asteroid;
+	private Location location;
 	private int smallWidth, medWidth, largeWidth; 
-	
+
 	public GameController(){
 		game = AsteroidsSingleton.getGame(); 
 		smallWidth = AsteroidsSingleton.getSmallAsteroidWidth(); 
 		medWidth = AsteroidsSingleton.getMedAsteroidWidth(); 
 		largeWidth = AsteroidsSingleton.getLargeAsteroidWidth(); 
-		
+
 		bullets = new ArrayList<Point>();
 		asteroids = new ArrayList<Asteroid>(); 
 	}
-	
+
 	public void rotateShip(float dTheta){
 		game.getShip().rotate(dTheta); 
 	}
-	
+
 	public float getRotation(){
 		return game.getShip().getTheta(); 
 	}
-	
+
 	public void fire(int height, int width){
 		float theta = game.getShip().getTheta(); 
 		game.getShip().addProjectile(width/2, height/2, theta); 
 	}
-	
+
 	public void updateProjectiles(int width, int height){
 		game.getShip().updateProjectiles(width, height); 
 	}
-	
+
 	public Object[] getProjectileCoords(){
-		
+
 		return game.getShip().getProjectiles(); 
 	}
-	
+
 	public int getLevel(){
 		return game.getLevel(); 
 	}
-	
+
 	public void removeProjectile(int index){
-		 game.getShip().removeProjectile(index);
+		game.getShip().removeProjectile(index);
 	}
-	
+
 	public int update() {
-		
+
 		int points = 0;
-		
+
 		if(asteroids.isEmpty()) {
 			// Increment the game level.
 			game.nextLevel(); 
-			
+
 			// Repopulate list of asteroids based on current level.
 			for(int i = 0; i < 3*game.getLevel(); i++) {
 				// Spawn an asteroid with random attributes at a random location on the edge of the map.
 				asteroids.add(new Asteroid(smallWidth, medWidth, largeWidth));
 			}
 		} else { // Otherwise, check for destroyed asteroids/spawn new asteroids, update asteroid positions, etc.
-			
+
 			List<Asteroid> updatedAsteroids = new ArrayList<Asteroid>();
-			
+
 			for(Asteroid asteroid : asteroids) {
-				
+
 				// If the current asteroid has no hitpoints left, add the newly spawned asteroids to the updated list.
 				// (You can't simply remove it because that breaks the for-each loop.)
 				if(asteroid.isDestroyed()) {
-					
+
 					switch(asteroid.getSize()) {
 					case 3: // If a LARGE asteroid, then spawn two MEDIUM asteroids at its location.
 						updatedAsteroids.add(new Asteroid(2, new Location(asteroid.getLocation().getX()-5, asteroid.getLocation().getY()-5)));
@@ -92,36 +95,93 @@ public class GameController {
 						break;
 					case 1: // If a SMALL asteroid, then simply add its value to score tally.
 						points++;
-						default: break;
+					default: break;
 					}
 				} else { // Otherwise, just move the asteroid to the new list.
 					updatedAsteroids.add(asteroid);
-					
+
 				}	
 			}
-			
+
 			// Point to the updated list (garbage collection will get rid of the old one).
 			asteroids = updatedAsteroids;
-		
+
 			// Check to see if asteroids are moving off-screen.
 			for(Asteroid asteroid : asteroids) {
 				asteroid.updateLocation(); 
 				asteroid.checkBoundary();	
 			}
 		}
-		
+
 		return points;
 	}
-	
+
 	public Object[] getAsteroidList(){
-		
+
 		return asteroids.toArray(); 
 	}
-	
+
 	public void removeAsteroid(int index)
 	{
 		asteroids.remove(index);
 	}
+
+	public void FireCollision()
+	{
+		Object[] asteroids  = getAsteroidList();
+		for(int i = 0; i < getAsteroidList().length; i++){
+			for(int p = 0; p < game.getShip().getProjectiles().length; p++){
+
+				double xDif = ((Asteroid) asteroids[i]).getLocation().getX() - ((Projectile) game.getShip().getProjectiles()[p]).getX();
+				double yDif = ((Asteroid) asteroids[i]).getLocation().getY() - ((Projectile) game.getShip().getProjectiles()[p]).getY();
+				double distanceSquared = xDif * xDif + yDif * yDif;
+
+
+
+				boolean collision = distanceSquared < (((Asteroid) asteroids[i]).getRadius() + 
+						((Projectile) game.getShip().getProjectiles()[p]).getRadius()) * (((Asteroid) asteroids[i]).getRadius() + 
+								((Projectile) game.getShip().getProjectiles()[p]).getRadius());
+				if(collision)
+				{				
+					removeAsteroid(i);		
+					game.getShip().removeProjectile(p);
+				}				
+			}
+		}
+	}
 	
-	
+	public void AsteroidCollision()
+	{
+		Object[] asteroids  = getAsteroidList();
+
+		for(int i=0; i<getAsteroidList().length; i++)
+		{
+			for(int j=i+1; j<getAsteroidList().length; j++)
+			{
+
+				double xDif = ((Asteroid) asteroids[i]).getLocation().getX() - ((Asteroid) asteroids[j]).getLocation().getX();
+				double yDif = ((Asteroid) asteroids[i]).getLocation().getY() - ((Asteroid) asteroids[j]).getLocation().getY();
+				double distanceSquared = xDif * xDif + yDif * yDif;
+
+
+
+				boolean collision = distanceSquared < (((Asteroid) asteroids[i]).getRadius() + 
+						((Asteroid) asteroids[j]).getRadius()) * (((Asteroid) asteroids[i]).getRadius() + 
+								((Asteroid) asteroids[j]).getRadius());
+				if(collision)
+				{				
+					System.out.println("Collision occured");
+					((Asteroid) asteroids[j]).setDx();
+					((Asteroid) asteroids[i]).setDx();
+						
+						
+					
+				}
+			}
+		}
+	}
+
+
+
+
 }

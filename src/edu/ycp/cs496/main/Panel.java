@@ -3,7 +3,7 @@ package edu.ycp.cs496.main;
 
 import java.util.List;
 
-import edu.ycp.cs496.asteroids.controllers.AsteroidController;
+
 import edu.ycp.cs496.asteroids.controllers.AsteroidsSingleton;
 import edu.ycp.cs496.asteroids.controllers.GameController;
 import edu.ycp.cs496.asteroids.model.Asteroid;
@@ -54,7 +54,7 @@ public class Panel extends SurfaceView implements Callback  {
 
 
 	private GameController cont;
-	private AsteroidController Asteroidcont;
+
 
 	private float dThetaR = 5.0f;
 	private float dThetaL = 5.0f; 
@@ -116,12 +116,12 @@ public class Panel extends SurfaceView implements Callback  {
 
 		//Create Models and Controllers
 		game = new Game(mWidth, mHeight); 
-		
-		
+
+
 		AsteroidsSingleton.getInstance();
 		AsteroidsSingleton.setGame(game); 
 		AsteroidsSingleton.setAsteroidWidths(asteroidSmall.getWidth(), asteroidMedium.getWidth(), asteroidLarge.getWidth());
-		
+
 		cont = new GameController();
 
 		//Make the Panel focusable so it can handle events
@@ -292,7 +292,7 @@ public class Panel extends SurfaceView implements Callback  {
 		}
 
 		drawButtons(canvas); 
-	
+
 	}
 
 
@@ -323,9 +323,11 @@ public class Panel extends SurfaceView implements Callback  {
 
 		cont.update();
 		asteroids = cont.getAsteroidList(); 
-		
-		checkFireCollilsion();
-		checkAsteroidsCollilsion();
+
+		cont.FireCollision();
+		cont.AsteroidCollision();
+
+
 	}
 
 	@Override
@@ -363,57 +365,9 @@ public class Panel extends SurfaceView implements Callback  {
 		Log.d(TAG, "Thread was shut down cleanly");
 	}
 
-	public void checkFireCollilsion()
-	{
-
-		for(int i = 0; i < cont.getAsteroidList().length; i++){
-			for(int p = 0; p < projectiles.length; p++){
-
-				double xDif = ((Asteroid) asteroids[i]).getLocation().getX() - ((Projectile) projectiles[p]).getX();
-				double yDif = ((Asteroid) asteroids[i]).getLocation().getY() - ((Projectile) projectiles[p]).getY();
-				double distanceSquared = xDif * xDif + yDif * yDif;
 
 
 
-				boolean collision = distanceSquared < (((Asteroid) asteroids[i]).getRadius() + 
-						((Projectile) projectiles[p]).getRadius()) * (((Asteroid) asteroids[i]).getRadius() + 
-								((Projectile) projectiles[p]).getRadius());
-				if(collision)
-				{				
-					cont.removeAsteroid(i);		
-					game.getShip().removeProjectile(p);
-				}				
-			}
-		}
-	}
-
-	public void checkAsteroidsCollilsion()
-	{
-		for(int i=0; i<cont.getAsteroidList().length; i++)
-		{
-			for(int j=i+1; j<cont.getAsteroidList().length; j++)
-			{
-
-				double xDif = ((Asteroid) asteroids[i]).getLocation().getX() - ((Asteroid) asteroids[j]).getLocation().getX();
-				double yDif = ((Asteroid) asteroids[i]).getLocation().getY() - ((Asteroid) asteroids[j]).getLocation().getY();
-				double distanceSquared = xDif * xDif + yDif * yDif;
-
-
-
-				boolean collision = distanceSquared < (((Asteroid) asteroids[i]).getRadius() + 
-						((Asteroid) asteroids[j]).getRadius()) * (((Asteroid) asteroids[i]).getRadius() + 
-								((Asteroid) asteroids[j]).getRadius());
-				if(collision)
-				{				
-					System.out.println("Collison has occured");	
-					
-					((Asteroid) asteroids[i]).getLocation().setX(((Asteroid) asteroids[i]).getLocation().getX()  + 10);
-					((Asteroid) asteroids[j]).getLocation().setX(((Asteroid) asteroids[j]).getLocation().getX() - 10);
-					
-				}				
-			}
-		}
-	}
 
 	private static enum ButtonType{
 		CLOCKWISE, COUNTERCLOCKWISE, FIRE, NONE

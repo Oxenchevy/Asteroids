@@ -2,7 +2,8 @@ package edu.ycp.cs496.asteroids.model;
 
 import java.util.Random;
 
-import android.graphics.Path.Direction;
+
+import edu.ycp.cs496.asteroids.controllers.GameController;
 import edu.ycp.cs496.main.Panel;
 
 public class Asteroid {
@@ -13,6 +14,8 @@ public class Asteroid {
 	private int hitpoints, size, radius, speed;
 	private float theta; 
 	private int smallWidth, medWidth, largeWidth; 
+	
+	private GameController cont;
 	// Constructor for asteroids with random attributes.
 	public Asteroid(int smallWidth, int medWidth, int largeWidth) {
 		location = new Location(0,0);
@@ -118,10 +121,20 @@ public class Asteroid {
 
 		return dy; 
 	}
+	
+	public void setDx(){
+
+		 dx *= -1; 
+	}
+
+	public void setDy(){
+
+		 dy *= -1;   
+	}
 
 	public void checkBoundary() {
 		// Left/right
-		if (location.getX() <= 0) {
+		/*if (location.getX() <= 0) {
 			location.setX((int) Panel.mWidth);
 			location.setY((int) Panel.mHeight - location.getY());
 		} else if (location.getX() >= Panel.mWidth) {
@@ -136,8 +149,8 @@ public class Asteroid {
 		} else if (location.getY() >= Panel.mHeight) {
 			location.setY(0);
 			location.setX((int) Panel.mWidth - location.getX()) ;		
-		}
-		/*
+		}*/
+		
 		// Left or right boundary
 		if (location.getX() <= 0) {
 			dx *= -1;
@@ -154,6 +167,7 @@ public class Asteroid {
 		} else if (location.getY() + (radius*2) >= Panel.mHeight) {
 			dy *= -1;
 			location.setY(Panel.mHeight - (radius*2));
-		}*/
+		}
 	}
+
 }
