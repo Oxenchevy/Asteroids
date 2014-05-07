@@ -88,4 +88,9 @@ public class AsteroidController {
 		return asteroids.toArray(); 
 	}
 	
+	public void removeAsteroid(int index)
+	{
+		asteroids.remove(index);
+	}
+	
 }

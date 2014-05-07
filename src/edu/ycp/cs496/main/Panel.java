@@ -26,6 +26,7 @@ import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 
 
@@ -36,6 +37,8 @@ public class Panel extends SurfaceView implements Callback  {
 	private static final String TAG = Panel.class.getSimpleName();
 	private GameThread thread; 
 	private Game game; 
+
+	Context c;
 
 
 
@@ -76,15 +79,15 @@ public class Panel extends SurfaceView implements Callback  {
 
 		getHolder().addCallback(this);
 
-
+		c = context;
 		// create the game loop thread
 		thread = new GameThread(getHolder(), this);
 		thread.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 
-	        public void uncaughtException(Thread t, Throwable e) {
-	         //  System.out.println(t + " throws exception: " + e);
-	        }
-	     });
+			public void uncaughtException(Thread t, Throwable e) {
+				//  System.out.println(t + " throws exception: " + e);
+			}
+		});
 
 		//Get Screen Dimensions
 		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -117,7 +120,7 @@ public class Panel extends SurfaceView implements Callback  {
 
 		//Make the Panel focusable so it can handle events
 		setFocusable(true);
-	
+
 		rotate = false; 
 
 		//Set button locations
@@ -238,8 +241,8 @@ public class Panel extends SurfaceView implements Callback  {
 	public void drawBackground(Canvas canvas){
 
 		//Draw Background
-		
-			canvas.drawBitmap(space, 0, 0, new Paint());
+
+		canvas.drawBitmap(space, 0, 0, new Paint());
 
 	}
 
@@ -253,38 +256,40 @@ public class Panel extends SurfaceView implements Callback  {
 	}
 
 	public void render(Canvas canvas) {
-		
-			drawBackground(canvas);
-			if(rotate){
-				canvas.drawBitmap(RotateBitmap(shipBitMap, cont.getRotation()), mWidth/2 - (shipBitMap.getWidth()/2), mHeight/2 - (shipBitMap.getHeight()/2), new Paint());
-			}
 
-			Paint paint = new Paint(); 
-			paint.setColor(Color.RED); 
-			for(int i = 0; i < projectiles.length; i++){
-				canvas.drawCircle(((Projectile) projectiles[i]).getX(), ((Projectile) projectiles[i]).getY(), ((Projectile) projectiles[i]).getRadius(), paint); 
-			}
-
-			for(int i = 0; i < Asteroidcont.getAsteroidList().length; i++){
-				int size = ((Asteroid) asteroids[i]).getSize();
-
-				if(size == 1){
-					canvas.drawBitmap(asteroidSmall, ((Asteroid) asteroids[i]).getLocation().getX(), ((Asteroid) asteroids[i]).getLocation().getY(),  new Paint());
-				}
-
-				else if(size == 2){
-					canvas.drawBitmap(asteroidMedium, ((Asteroid) asteroids[i]).getLocation().getX(), ((Asteroid) asteroids[i]).getLocation().getY(),  new Paint());
-				}
-
-				else{
-					canvas.drawBitmap(asteroidLarge, ((Asteroid) asteroids[i]).getLocation().getX(), ((Asteroid) asteroids[i]).getLocation().getY(),  new Paint());
-				}
-
-			}
-
-			drawButtons(canvas); 
+		drawBackground(canvas);
+		if(rotate){
+			canvas.drawBitmap(RotateBitmap(shipBitMap, cont.getRotation()), mWidth/2 - (shipBitMap.getWidth()/2), mHeight/2 - (shipBitMap.getHeight()/2), new Paint());
 		}
-	
+
+		Paint paint = new Paint(); 
+		paint.setColor(Color.RED); 
+		for(int i = 0; i < projectiles.length; i++){
+			canvas.drawCircle(((Projectile) projectiles[i]).getX(), ((Projectile) projectiles[i]).getY(), ((Projectile) projectiles[i]).getRadius(), paint); 
+		}
+
+		for(int i = 0; i < Asteroidcont.getAsteroidList().length; i++){
+			int size = ((Asteroid) asteroids[i]).getSize();
+
+			if(size == 1){
+				canvas.drawBitmap(asteroidSmall, ((Asteroid) asteroids[i]).getLocation().getX(), ((Asteroid) asteroids[i]).getLocation().getY(),  new Paint());
+			}
+
+			else if(size == 2){
+				canvas.drawBitmap(asteroidMedium, ((Asteroid) asteroids[i]).getLocation().getX(), ((Asteroid) asteroids[i]).getLocation().getY(),  new Paint());
+			}
+
+			else{
+				canvas.drawBitmap(asteroidLarge, ((Asteroid) asteroids[i]).getLocation().getX(), ((Asteroid) asteroids[i]).getLocation().getY(),  new Paint());
+			}
+
+		}
+
+		drawButtons(canvas); 
+		checkFireCollilsion();
+		checkAsteroidsCollilsion();
+	}
+
 
 
 	public static Bitmap RotateBitmap(Bitmap source, float angle)
@@ -325,7 +330,7 @@ public class Panel extends SurfaceView implements Callback  {
 	public void surfaceCreated(SurfaceHolder holder) {
 		// at this point the surface is created and
 		// we can safely start the game loop
-	
+
 		thread.setRunning(true);
 		thread.start();
 
@@ -342,13 +347,59 @@ public class Panel extends SurfaceView implements Callback  {
 		while (retry) {
 			try {
 				thread.join();
-				
+
 				retry = false;
 			} catch (InterruptedException e) {
 				// try again shutting down the thread
 			}
 		}
 		Log.d(TAG, "Thread was shut down cleanly");
+	}
+
+	public void checkFireCollilsion()
+	{
+
+		for(int i = 0; i < Asteroidcont.getAsteroidList().length; i++){
+			for(int p = 0; p < projectiles.length; p++){
+
+				double xDif = ((Asteroid) asteroids[i]).getLocation().getX() - ((Projectile) projectiles[p]).getX();
+				double yDif = ((Asteroid) asteroids[i]).getLocation().getY() - ((Projectile) projectiles[p]).getY();
+				double distanceSquared = xDif * xDif + yDif * yDif;
+
+
+
+				boolean collision = distanceSquared < (((Asteroid) asteroids[i]).getRadius() + 
+						((Projectile) projectiles[p]).getRadius()) * (((Asteroid) asteroids[i]).getRadius() + 
+								((Projectile) projectiles[p]).getRadius());
+				if(collision)
+				{				
+					Asteroidcont.removeAsteroid(i);					
+				}				
+			}
+		}
+	}
+	
+	public void checkAsteroidsCollilsion()
+	{
+
+		for(int i = 0; i < Asteroidcont.getAsteroidList().length; i++){
+			for(int p = 0; p < Asteroidcont.getAsteroidList().length; p++){
+
+				double xDif = ((Asteroid) asteroids[i]).getLocation().getX() - ((Asteroid) asteroids[p]).getLocation().getX();
+				double yDif = ((Asteroid) asteroids[i]).getLocation().getY() - ((Asteroid) asteroids[p]).getLocation().getY();
+				double distanceSquared = xDif * xDif + yDif * yDif;
+
+
+
+				boolean collision = distanceSquared < (((Asteroid) asteroids[i]).getRadius() + 
+						((Asteroid) asteroids[p]).getRadius()) * (((Asteroid) asteroids[i]).getRadius() + 
+								((Asteroid) asteroids[p]).getRadius());
+				if(!collision)
+				{				
+					System.out.println("Collison has occured");				
+				}				
+			}
+		}
 	}
 
 	private static enum ButtonType{
