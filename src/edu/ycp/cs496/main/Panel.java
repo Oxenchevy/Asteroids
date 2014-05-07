@@ -373,30 +373,36 @@ public class Panel extends SurfaceView implements Callback  {
 								((Projectile) projectiles[p]).getRadius());
 				if(collision)
 				{				
-					Asteroidcont.removeAsteroid(i);					
+					Asteroidcont.removeAsteroid(i);		
+					game.getShip().removeProjectile(p);
 				}				
 			}
 		}
 	}
-	
+
 	public void checkAsteroidsCollilsion()
 	{
+		for(int i=0; i<Asteroidcont.getAsteroidList().length; i++)
+		{
+			for(int j=i+1; j<Asteroidcont.getAsteroidList().length; j++)
+			{
 
-		for(int i = 0; i < Asteroidcont.getAsteroidList().length; i++){
-			for(int p = 0; p < Asteroidcont.getAsteroidList().length; p++){
-
-				double xDif = ((Asteroid) asteroids[i]).getLocation().getX() - ((Asteroid) asteroids[p]).getLocation().getX();
-				double yDif = ((Asteroid) asteroids[i]).getLocation().getY() - ((Asteroid) asteroids[p]).getLocation().getY();
+				double xDif = ((Asteroid) asteroids[i]).getLocation().getX() - ((Asteroid) asteroids[j]).getLocation().getX();
+				double yDif = ((Asteroid) asteroids[i]).getLocation().getY() - ((Asteroid) asteroids[j]).getLocation().getY();
 				double distanceSquared = xDif * xDif + yDif * yDif;
 
 
 
 				boolean collision = distanceSquared < (((Asteroid) asteroids[i]).getRadius() + 
-						((Asteroid) asteroids[p]).getRadius()) * (((Asteroid) asteroids[i]).getRadius() + 
-								((Asteroid) asteroids[p]).getRadius());
-				if(!collision)
+						((Asteroid) asteroids[j]).getRadius()) * (((Asteroid) asteroids[i]).getRadius() + 
+								((Asteroid) asteroids[j]).getRadius());
+				if(collision)
 				{				
-					System.out.println("Collison has occured");				
+					System.out.println("Collison has occured");	
+					
+					((Asteroid) asteroids[i]).getLocation().setX(((Asteroid) asteroids[i]).getLocation().getX()  + 10);
+					((Asteroid) asteroids[j]).getLocation().setX(((Asteroid) asteroids[j]).getLocation().getX() - 10);
+					
 				}				
 			}
 		}

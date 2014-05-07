@@ -81,6 +81,11 @@ public class Ship extends User {
 		this.theta = theta;
 	}
 	
+	public void removeProjectile(int index)
+	{
+		projectiles.remove(index);
+	}
+	
 	public Object[] getProjectiles(){
 		return projectiles.toArray(); 
 	}

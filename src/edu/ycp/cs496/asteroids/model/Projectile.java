@@ -14,8 +14,6 @@ public class Projectile {
 		this.theta = theta;
 		this.speed = 15; 
 		radius = 10; 
-		
-
 	}
 	
 	public float getX() {

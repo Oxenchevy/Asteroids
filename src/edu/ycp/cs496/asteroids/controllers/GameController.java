@@ -42,5 +42,10 @@ public class GameController {
 		return game.getLevel(); 
 	}
 	
+	public void removeProjectile(int index){
+		 game.getShip().removeProjectile(index);
+	}
+	
+	
 	
 }
