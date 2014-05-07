@@ -12,7 +12,7 @@ public class Asteroid {
 	private float dx, dy; 
 	private int hitpoints, size, radius, speed;
 	private float theta; 
-	
+	private int smallWidth, medWidth, largeWidth; 
 	// Constructor for asteroids with random attributes.
 	public Asteroid(int smallWidth, int medWidth, int largeWidth) {
 		location = new Location(0,0);
@@ -22,20 +22,23 @@ public class Asteroid {
 		size = rand.nextInt(3)+1;
 		hitpoints = size;
 		
-		
+		this.smallWidth = smallWidth; 
+		this.medWidth = medWidth; 
+		this.largeWidth = largeWidth; 
+
 		switch(size) {
 		case 1: speed = 5; radius = smallWidth/2; break;
 		case 2: speed = 3; radius = medWidth/2; break;
 		case 3: speed = 1; radius = largeWidth/2; break;
 		}
-		
+
 		theta = rand.nextInt(360); 
-		
+
 		dx = (float) Math.sin(Math.toRadians(theta)) * speed;
-        dy = -(float) Math.cos(Math.toRadians(theta)) * speed;
-		
+		dy = -(float) Math.cos(Math.toRadians(theta)) * speed;
+
 		int locgen = rand.nextInt(4)+1;
-		
+
 		switch(locgen) {
 		case 1: // Spawn along the left edge of the screen.
 			location.setX(0);
@@ -53,7 +56,7 @@ public class Asteroid {
 			location.setX(rand.nextInt((int) Panel.mHeight));
 			location.setY((int) Panel.mHeight);
 			break;
-			default: break;
+		default: break;
 		}
 	}
 
@@ -78,7 +81,7 @@ public class Asteroid {
 	public void updateLocation(){
 		int x = location.getX();
 		int y = location.getY(); 
-		
+
 		location.setX(x + (int)dx);
 		location.setY(y + (int)dy);
 	}
@@ -105,17 +108,17 @@ public class Asteroid {
 		else 
 			return false;
 	}
-	
+
 	public float getDx(){
-		
+
 		return dx; 
 	}
-	
+
 	public float getDy(){
-		
+
 		return dy; 
 	}
-	
+
 	public void checkBoundary() {
 		// Left/right
 		if (location.getX() <= 0) {
@@ -134,5 +137,23 @@ public class Asteroid {
 			location.setY(0);
 			location.setX((int) Panel.mWidth - location.getX()) ;		
 		}
+		/*
+		// Left or right boundary
+		if (location.getX() <= 0) {
+			dx *= -1;
+			location.setX(0);  
+		} else if (location.getX() + (radius*2) >= Panel.mWidth) {
+			dx *= -1;
+			location.setX(Panel.mWidth - (radius*2));
+		}
+
+		// Top or bottom boundary
+		if (location.getY() <= 0) {
+			dy *= -1;
+			location.setY(0); 
+		} else if (location.getY() + (radius*2) >= Panel.mHeight) {
+			dy *= -1;
+			location.setY(Panel.mHeight - (radius*2));
+		}*/
 	}
 }

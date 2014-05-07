@@ -4,6 +4,7 @@ package edu.ycp.cs496.main;
 import java.util.List;
 
 import edu.ycp.cs496.asteroids.controllers.AsteroidController;
+import edu.ycp.cs496.asteroids.controllers.AsteroidsSingleton;
 import edu.ycp.cs496.asteroids.controllers.GameController;
 import edu.ycp.cs496.asteroids.model.Asteroid;
 import edu.ycp.cs496.asteroids.model.Game;
@@ -37,7 +38,7 @@ public class Panel extends SurfaceView implements Callback  {
 	private static final String TAG = Panel.class.getSimpleName();
 	private GameThread thread; 
 	private Game game; 
-
+	private AsteroidsSingleton singleton; 
 	Context c;
 
 
@@ -115,8 +116,13 @@ public class Panel extends SurfaceView implements Callback  {
 
 		//Create Models and Controllers
 		game = new Game(mWidth, mHeight); 
-		cont = new GameController(game); 
-		Asteroidcont = new AsteroidController(asteroidSmall.getWidth(), asteroidMedium.getWidth(), asteroidLarge.getWidth());
+		
+		
+		AsteroidsSingleton.getInstance();
+		AsteroidsSingleton.setGame(game); 
+		AsteroidsSingleton.setAsteroidWidths(asteroidSmall.getWidth(), asteroidMedium.getWidth(), asteroidLarge.getWidth());
+		
+		cont = new GameController();
 
 		//Make the Panel focusable so it can handle events
 		setFocusable(true);
@@ -268,7 +274,7 @@ public class Panel extends SurfaceView implements Callback  {
 			canvas.drawCircle(((Projectile) projectiles[i]).getX(), ((Projectile) projectiles[i]).getY(), ((Projectile) projectiles[i]).getRadius(), paint); 
 		}
 
-		for(int i = 0; i < Asteroidcont.getAsteroidList().length; i++){
+		for(int i = 0; i < cont.getAsteroidList().length; i++){
 			int size = ((Asteroid) asteroids[i]).getSize();
 
 			if(size == 1){
@@ -286,8 +292,7 @@ public class Panel extends SurfaceView implements Callback  {
 		}
 
 		drawButtons(canvas); 
-		checkFireCollilsion();
-		checkAsteroidsCollilsion();
+	
 	}
 
 
@@ -316,9 +321,11 @@ public class Panel extends SurfaceView implements Callback  {
 		cont.updateProjectiles(mWidth, mHeight); 
 		projectiles = cont.getProjectileCoords(); 
 
-		Asteroidcont.update(cont.getLevel());
-		asteroids = Asteroidcont.getAsteroidList(); 
-
+		cont.update();
+		asteroids = cont.getAsteroidList(); 
+		
+		checkFireCollilsion();
+		checkAsteroidsCollilsion();
 	}
 
 	@Override
@@ -359,7 +366,7 @@ public class Panel extends SurfaceView implements Callback  {
 	public void checkFireCollilsion()
 	{
 
-		for(int i = 0; i < Asteroidcont.getAsteroidList().length; i++){
+		for(int i = 0; i < cont.getAsteroidList().length; i++){
 			for(int p = 0; p < projectiles.length; p++){
 
 				double xDif = ((Asteroid) asteroids[i]).getLocation().getX() - ((Projectile) projectiles[p]).getX();
@@ -373,7 +380,7 @@ public class Panel extends SurfaceView implements Callback  {
 								((Projectile) projectiles[p]).getRadius());
 				if(collision)
 				{				
-					Asteroidcont.removeAsteroid(i);		
+					cont.removeAsteroid(i);		
 					game.getShip().removeProjectile(p);
 				}				
 			}
@@ -382,9 +389,9 @@ public class Panel extends SurfaceView implements Callback  {
 
 	public void checkAsteroidsCollilsion()
 	{
-		for(int i=0; i<Asteroidcont.getAsteroidList().length; i++)
+		for(int i=0; i<cont.getAsteroidList().length; i++)
 		{
-			for(int j=i+1; j<Asteroidcont.getAsteroidList().length; j++)
+			for(int j=i+1; j<cont.getAsteroidList().length; j++)
 			{
 
 				double xDif = ((Asteroid) asteroids[i]).getLocation().getX() - ((Asteroid) asteroids[j]).getLocation().getX();
