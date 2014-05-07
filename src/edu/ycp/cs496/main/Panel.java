@@ -3,9 +3,10 @@ package edu.ycp.cs496.main;
 
 import java.util.List;
 
-
+import edu.ycp.cs496.asteroids.controllers.AsteroidController;
 import edu.ycp.cs496.asteroids.controllers.AsteroidsSingleton;
-import edu.ycp.cs496.asteroids.controllers.GameController;
+import edu.ycp.cs496.asteroids.controllers.ProjectileController;
+import edu.ycp.cs496.asteroids.controllers.ShipController;
 import edu.ycp.cs496.asteroids.model.Asteroid;
 import edu.ycp.cs496.asteroids.model.Game;
 import edu.ycp.cs496.asteroids.model.Projectile;
@@ -18,7 +19,6 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -26,23 +26,22 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.Toast;
+
 
 
 
 public class Panel extends SurfaceView implements Callback  {
 	public static int mWidth;
 	public static int mHeight;
-	private MediaPlayer mediaPlayer; 
 	private static final String TAG = Panel.class.getSimpleName();
+	
+	//Game Model
 	private GameThread thread; 
 	private Game game; 
-	private AsteroidsSingleton singleton; 
-	Context c;
+	private Context context;
 
 
-
+	//Bitmaps
 	private Bitmap shipBitMap;
 	private Bitmap cRotate;
 	private Bitmap ccRotate;
@@ -51,11 +50,14 @@ public class Panel extends SurfaceView implements Callback  {
 	private Bitmap asteroidSmall;
 	private Bitmap asteroidMedium;
 	private Bitmap asteroidLarge;
-
-
-	private GameController cont;
-
-
+	private Bitmap ballBitMap; 
+	
+	//Controllers
+	private AsteroidController asteroidCont;
+	private ShipController shipCont; 
+	private ProjectileController projCont; 
+	
+	//Local class fields; 
 	private float dThetaR = 5.0f;
 	private float dThetaL = 5.0f; 
 	private boolean rotate; 
@@ -71,7 +73,7 @@ public class Panel extends SurfaceView implements Callback  {
 	private ButtonType button;
 	private Object[] projectiles; 
 	private Object[] asteroids; 
-	// TODO: Add class fields
+
 
 	@SuppressLint("NewApi")
 	public Panel(Context context) {
@@ -80,7 +82,7 @@ public class Panel extends SurfaceView implements Callback  {
 
 		getHolder().addCallback(this);
 
-		c = context;
+		this.context = context;
 		// create the game loop thread
 		thread = new GameThread(getHolder(), this);
 		thread.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
@@ -105,28 +107,30 @@ public class Panel extends SurfaceView implements Callback  {
 		cRotate = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotateclockwise);
 		ccRotate = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotatecounter);
 		fire = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_fire);
-		shipBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.image_ship);
+		shipBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.image_ship_symmetric);
 		shipBitMap = Bitmap.createScaledBitmap(shipBitMap, shipBitMap.getWidth() * 2, shipBitMap.getHeight() * 2, true); 
-
+		ballBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.image_projectile_red);
+		ballBitMap = Bitmap.createScaledBitmap(ballBitMap, ballBitMap.getWidth() * 2, ballBitMap.getHeight() * 2, true); 
 		asteroidSmall = BitmapFactory.decodeResource(getResources(), R.drawable.image_asteroid_small);
 		asteroidMedium = BitmapFactory.decodeResource(getResources(), R.drawable.image_asteroid_medium);
 		asteroidLarge = BitmapFactory.decodeResource(getResources(), R.drawable.image_asteroid_large);
 
 
-
-		//Create Models and Controllers
+		//Create game model
 		game = new Game(mWidth, mHeight); 
-
-
+		
+		//Set instance of game model in singleton
 		AsteroidsSingleton.getInstance();
 		AsteroidsSingleton.setGame(game); 
 		AsteroidsSingleton.setAsteroidWidths(asteroidSmall.getWidth(), asteroidMedium.getWidth(), asteroidLarge.getWidth());
-
-		cont = new GameController();
-
+		
+		//Create controllers
+		asteroidCont = new AsteroidController(); 
+		projCont = new ProjectileController();
+		shipCont = new ShipController(); 
+		
 		//Make the Panel focusable so it can handle events
 		setFocusable(true);
-
 		rotate = false; 
 
 		//Set button locations
@@ -150,17 +154,23 @@ public class Panel extends SurfaceView implements Callback  {
 		if(buttonHits(x, y) == ButtonType.CLOCKWISE){
 			rotate = true;
 			button = ButtonType.CLOCKWISE; 
+			
+			cRotate = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotateclockwise_press);
 		}
 
 		if(buttonHits(x, y) == ButtonType.COUNTERCLOCKWISE){
 			rotate = true; 
 			button = ButtonType.COUNTERCLOCKWISE;
+			
+			ccRotate = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotatecounter_press);
 		}
 
 		if(buttonHits(x, y) == ButtonType.FIRE){
 			//Log.d(TAG, "FIRE!"); 
 			button = ButtonType.FIRE;
 			fire(); 
+			
+			fire = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_fire_press);
 		}
 
 		if(buttonHits(x, y) == ButtonType.NONE){
@@ -173,6 +183,10 @@ public class Panel extends SurfaceView implements Callback  {
 			rotate = false;
 			button = ButtonType.NONE;
 			//Log.d(TAG, "UP!"); 
+			
+			cRotate = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotateclockwise);
+			ccRotate = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotatecounter);
+			fire = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_fire);
 		}
 		return true; 
 
@@ -237,8 +251,8 @@ public class Panel extends SurfaceView implements Callback  {
 	}
 
 	public void fire(){
-		if(System.currentTimeMillis() - fireTime > 250){
-			cont.fire(mHeight, mWidth); 
+		if(System.currentTimeMillis() - fireTime > 200){
+			projCont.fire(mHeight, mWidth); 
 		}
 
 		fireTime = System.currentTimeMillis(); 
@@ -247,7 +261,6 @@ public class Panel extends SurfaceView implements Callback  {
 	public void drawBackground(Canvas canvas){
 
 		//Draw Background
-
 		canvas.drawBitmap(space, 0, 0, new Paint());
 
 	}
@@ -258,23 +271,24 @@ public class Panel extends SurfaceView implements Callback  {
 		canvas.drawBitmap(cRotate, clockwiseX, clockwiseY, new Paint());
 		canvas.drawBitmap(ccRotate, counterX, counterY, new Paint());
 		canvas.drawBitmap(fire, fireX, fireY, new Paint());
-		canvas.drawBitmap(RotateBitmap(shipBitMap, cont.getRotation()), mWidth/2 - (shipBitMap.getWidth()/2), mHeight/2 - (shipBitMap.getHeight()/2), new Paint());
+		canvas.drawBitmap(RotateBitmap(shipBitMap, shipCont.getRotation()), mWidth/2 - (shipBitMap.getWidth()/2), mHeight/2 - (shipBitMap.getHeight()/2), new Paint());
 	}
 
 	public void render(Canvas canvas) {
 
 		drawBackground(canvas);
 		if(rotate){
-			canvas.drawBitmap(RotateBitmap(shipBitMap, cont.getRotation()), mWidth/2 - (shipBitMap.getWidth()/2), mHeight/2 - (shipBitMap.getHeight()/2), new Paint());
+			canvas.drawBitmap(RotateBitmap(shipBitMap, shipCont.getRotation()), mWidth/2 - (shipBitMap.getWidth()/2), mHeight/2 - (shipBitMap.getHeight()/2), new Paint());
 		}
 
 		Paint paint = new Paint(); 
 		paint.setColor(Color.RED); 
 		for(int i = 0; i < projectiles.length; i++){
-			canvas.drawCircle(((Projectile) projectiles[i]).getX(), ((Projectile) projectiles[i]).getY(), ((Projectile) projectiles[i]).getRadius(), paint); 
+			canvas.drawBitmap(ballBitMap, ((Projectile) projectiles[i]).getX(), ((Projectile) projectiles[i]).getY(), new Paint());  
+			//canvas.drawCircle(((Projectile) projectiles[i]).getX(), ((Projectile) projectiles[i]).getY(), ((Projectile) projectiles[i]).getRadius(), paint); 
 		}
 
-		for(int i = 0; i < cont.getAsteroidList().length; i++){
+		for(int i = 0; i < asteroidCont.getAsteroidList().length; i++){
 			int size = ((Asteroid) asteroids[i]).getSize();
 
 			if(size == 1){
@@ -292,7 +306,7 @@ public class Panel extends SurfaceView implements Callback  {
 		}
 
 		drawButtons(canvas); 
-
+	
 	}
 
 
@@ -310,24 +324,22 @@ public class Panel extends SurfaceView implements Callback  {
 	public void update() {
 
 		if(button == ButtonType.CLOCKWISE){
-			cont.rotateShip(dThetaR * pressure); 
+			shipCont.rotateShip(dThetaR * pressure); 
 		}
 
 		else if(button == ButtonType.COUNTERCLOCKWISE){
-			cont.rotateShip(-dThetaL * pressure); 
+			shipCont.rotateShip(-dThetaL * pressure); 
 		}
 
 
-		cont.updateProjectiles(mWidth, mHeight); 
-		projectiles = cont.getProjectileCoords(); 
+		projCont.updateProjectiles(mWidth, mHeight); 
+		projectiles = projCont.getProjectileCoords(); 
 
-		cont.update();
-		asteroids = cont.getAsteroidList(); 
-
-		cont.FireCollision();
-		cont.AsteroidCollision();
-
-
+		asteroidCont.update();
+		asteroids = asteroidCont.getAsteroidList(); 
+		
+		asteroidCont.fireCollision();
+		asteroidCont.asteroidCollision();
 	}
 
 	@Override
@@ -364,10 +376,6 @@ public class Panel extends SurfaceView implements Callback  {
 		}
 		Log.d(TAG, "Thread was shut down cleanly");
 	}
-
-
-
-
 
 	private static enum ButtonType{
 		CLOCKWISE, COUNTERCLOCKWISE, FIRE, NONE

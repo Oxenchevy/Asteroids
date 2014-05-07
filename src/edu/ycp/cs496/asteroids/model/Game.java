@@ -13,7 +13,6 @@ public class Game {
 		user = new User(); 
 		ship = new Ship(x/2, y/2); 
 		asteroids = new ArrayList<Asteroid>(); 
-		
 		level = 0; 
 	}
 	

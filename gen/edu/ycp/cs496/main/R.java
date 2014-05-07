@@ -8,6 +8,12 @@
 package edu.ycp.cs496.main;
 
 public final class R {
+    public static final class array {
+        public static final int pref_example_list_titles=0x7f080000;
+        public static final int pref_example_list_values=0x7f080001;
+        public static final int pref_sync_frequency_titles=0x7f080002;
+        public static final int pref_sync_frequency_values=0x7f080003;
+    }
     public static final class attr {
     }
     public static final class dimen {
@@ -17,8 +23,8 @@ public final class R {
          screen margins) for sw720dp devices (e.g. 10" tablets) in landscape here.
     
          */
-        public static final int activity_horizontal_margin=0x7f050000;
-        public static final int activity_vertical_margin=0x7f050001;
+        public static final int activity_horizontal_margin=0x7f060000;
+        public static final int activity_vertical_margin=0x7f060001;
     }
     public static final class drawable {
         public static final int asteroidsmenu=0x7f020000;
@@ -27,21 +33,30 @@ public final class R {
         public static final int image_asteroid_medium=0x7f020003;
         public static final int image_asteroid_small=0x7f020004;
         public static final int image_button_fire=0x7f020005;
-        public static final int image_button_rotateclockwise=0x7f020006;
-        public static final int image_button_rotatecounter=0x7f020007;
-        public static final int image_ship=0x7f020008;
-        public static final int play=0x7f020009;
-        public static final int scores=0x7f02000a;
-        public static final int settings=0x7f02000b;
-        public static final int space=0x7f02000c;
-        public static final int title=0x7f02000d;
+        public static final int image_button_fire_press=0x7f020006;
+        public static final int image_button_rotateclockwise=0x7f020007;
+        public static final int image_button_rotateclockwise_press=0x7f020008;
+        public static final int image_button_rotatecounter=0x7f020009;
+        public static final int image_button_rotatecounter_press=0x7f02000a;
+        public static final int image_projectile_blue=0x7f02000b;
+        public static final int image_projectile_red=0x7f02000c;
+        public static final int image_projectile_yellow=0x7f02000d;
+        public static final int image_ship=0x7f02000e;
+        public static final int image_ship_symmetric=0x7f02000f;
+        public static final int image_ship_symmetric_shield=0x7f020010;
+        public static final int image_ship_symmetric_supershield=0x7f020011;
+        public static final int play=0x7f020012;
+        public static final int scores=0x7f020013;
+        public static final int settings=0x7f020014;
+        public static final int space=0x7f020015;
+        public static final int title=0x7f020016;
     }
     public static final class id {
-        public static final int action_settings=0x7f090004;
-        public static final int imageView1=0x7f090000;
-        public static final int imageView2=0x7f090002;
-        public static final int imageView3=0x7f090001;
-        public static final int imageView4=0x7f090003;
+        public static final int action_settings=0x7f0b0004;
+        public static final int imageView1=0x7f0b0000;
+        public static final int imageView2=0x7f0b0002;
+        public static final int imageView3=0x7f0b0001;
+        public static final int imageView4=0x7f0b0003;
     }
     public static final class layout {
         public static final int activity_asteroid_view=0x7f030000;
@@ -50,21 +65,43 @@ public final class R {
         public static final int activity_menu=0x7f030003;
     }
     public static final class menu {
-        public static final int asteroid_view=0x7f080000;
-        public static final int asteroids_temp=0x7f080001;
-        public static final int leaderboard=0x7f080002;
-        public static final int menu=0x7f080003;
+        public static final int asteroid_view=0x7f0a0000;
+        public static final int asteroids_temp=0x7f0a0001;
+        public static final int leaderboard=0x7f0a0002;
+        public static final int menu=0x7f0a0003;
     }
     public static final class raw {
-        public static final int asteroids=0x7f040000;
+        public static final int asteroids=0x7f050000;
     }
     public static final class string {
-        public static final int action_settings=0x7f060001;
-        public static final int app_name=0x7f060000;
-        public static final int hello_world=0x7f060002;
-        public static final int title_activity_asteroids_temp=0x7f060004;
-        public static final int title_activity_leaderboard=0x7f060003;
-        public static final int title_activity_menu=0x7f060005;
+        public static final int action_settings=0x7f070001;
+        public static final int app_name=0x7f070000;
+        public static final int hello_world=0x7f070002;
+        public static final int pref_default_display_name=0x7f07000b;
+        public static final int pref_description_social_recommendations=0x7f070009;
+        /**  Example settings for Data & Sync 
+         */
+        public static final int pref_header_data_sync=0x7f07000d;
+        /**  Strings related to Settings 
+ Example General settings 
+         */
+        public static final int pref_header_general=0x7f070007;
+        /**  Example settings for Notifications 
+         */
+        public static final int pref_header_notifications=0x7f070010;
+        public static final int pref_ringtone_silent=0x7f070013;
+        public static final int pref_title_add_friends_to_messages=0x7f07000c;
+        public static final int pref_title_display_name=0x7f07000a;
+        public static final int pref_title_new_message_notifications=0x7f070011;
+        public static final int pref_title_ringtone=0x7f070012;
+        public static final int pref_title_social_recommendations=0x7f070008;
+        public static final int pref_title_sync_frequency=0x7f07000e;
+        public static final int pref_title_system_sync_settings=0x7f07000f;
+        public static final int pref_title_vibrate=0x7f070014;
+        public static final int title_activity_asteroids_temp=0x7f070004;
+        public static final int title_activity_leaderboard=0x7f070003;
+        public static final int title_activity_menu=0x7f070005;
+        public static final int title_activity_settings=0x7f070006;
     }
     public static final class style {
         /** 
@@ -88,10 +125,16 @@ public final class R {
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f070000;
+        public static final int AppBaseTheme=0x7f090000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f070001;
+        public static final int AppTheme=0x7f090001;
+    }
+    public static final class xml {
+        public static final int pref_data_sync=0x7f040000;
+        public static final int pref_general=0x7f040001;
+        public static final int pref_headers=0x7f040002;
+        public static final int pref_notification=0x7f040003;
     }
 }

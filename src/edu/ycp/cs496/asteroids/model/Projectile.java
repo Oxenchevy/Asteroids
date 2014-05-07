@@ -12,7 +12,7 @@ public class Projectile {
 		this.x = x; 
 		this.y = y;
 		this.theta = theta;
-		this.speed = 15; 
+		this.speed = 25; 
 		radius = 10; 
 	}
 	

@@ -33,7 +33,6 @@
             android:name="edu.ycp.cs496.main.AsteroidsTemp"
             android:label="@string/title_activity_asteroids_temp"
             android:screenOrientation="sensorLandscape" >
-            
         </activity>
         <activity
             android:name="edu.ycp.cs496.main.MenuActivity"
@@ -43,6 +42,10 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="edu.ycp.cs496.main.SettingsActivity"
+            android:label="@string/title_activity_settings" >
         </activity>
     </application>
 
