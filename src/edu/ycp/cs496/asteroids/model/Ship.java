@@ -21,7 +21,7 @@ public class Ship extends User {
 		this.y = y; 
 		theta = 0; 
 		// INITIALIZE DIRECTION
-		hitpoints = 5;
+		hitpoints = 6;
 		radius = 40;
 		lives = 2;
 		

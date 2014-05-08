@@ -1,6 +1,7 @@
 package edu.ycp.cs496.asteroids.controllers;
 
 import edu.ycp.cs496.asteroids.model.Game;
+import edu.ycp.cs496.main.GameThread;
 
 public class AsteroidsSingleton {
 
@@ -10,6 +11,8 @@ public class AsteroidsSingleton {
 	private static int largeAsteroidWidth; 
 	private static int screenHeight; 
 	private static int screenWidth; 
+	
+	private static GameThread thread; 
 
 	private static AsteroidsSingleton instance = null;
 	protected AsteroidsSingleton() {
@@ -61,4 +64,17 @@ public class AsteroidsSingleton {
 	public static int getScreenWidth() {
 		return screenWidth;
 	}
+	
+	public static void setThread(GameThread threads)
+	{
+		thread = threads;
+		
+	}
+	public static GameThread getThread()
+	{
+		return thread;
+		
+	}
+	
+	
 }

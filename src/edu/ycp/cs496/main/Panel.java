@@ -63,6 +63,12 @@ public class Panel extends SurfaceView implements Callback  {
 	private Bitmap asteroidMedium;
 	private Bitmap asteroidLarge;
 	private Bitmap ballBitMap; 
+	private Bitmap greenHealth;
+	private Bitmap yellowHealth;
+	private Bitmap orangeHealth;
+	private Bitmap redHealth;
+	
+	Bitmap temp;
 
 	//Controllers
 	private AsteroidController asteroidCont;
@@ -104,6 +110,9 @@ public class Panel extends SurfaceView implements Callback  {
 				//  System.out.println(t + " throws exception: " + e);
 			}
 		});
+		
+		AsteroidsSingleton.getInstance();
+		AsteroidsSingleton.setThread(thread);
 
 		//Get Screen Dimensions
 		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -130,7 +139,22 @@ public class Panel extends SurfaceView implements Callback  {
 		//asteroidMedium = Bitmap.createScaledBitmap(asteroidMedium, asteroidMedium.getWidth() * 2, asteroidMedium.getHeight() * 2, true); 
 		asteroidLarge = BitmapFactory.decodeResource(getResources(), R.drawable.image_asteroid_large);
 		//asteroidLarge = Bitmap.createScaledBitmap(asteroidLarge, asteroidLarge.getWidth() * 2, asteroidLarge.getHeight() * 2, true); 
-
+		
+		
+		greenHealth = BitmapFactory.decodeResource(getResources(), R.drawable.green_health);
+		greenHealth = Bitmap.createScaledBitmap(greenHealth, greenHealth.getWidth() /4, greenHealth.getHeight() / 4, true);
+		
+		orangeHealth = BitmapFactory.decodeResource(getResources(), R.drawable.orange_health);
+		orangeHealth = Bitmap.createScaledBitmap(orangeHealth, orangeHealth.getWidth() /4, orangeHealth.getHeight() / 4, true);
+		
+		yellowHealth = BitmapFactory.decodeResource(getResources(), R.drawable.yellow_health);
+		yellowHealth = Bitmap.createScaledBitmap(yellowHealth, yellowHealth.getWidth() /4, yellowHealth.getHeight() / 4, true);
+		
+		redHealth = BitmapFactory.decodeResource(getResources(), R.drawable.red_health);
+		redHealth = Bitmap.createScaledBitmap(redHealth, redHealth.getWidth() /4, redHealth.getHeight() / 4, true);
+		
+		
+		temp = greenHealth;
 		//Media
 		/*sp = new SoundPool(5, AudioManager.STREAM_MUSIC, 0); 
 		soundIds[0] = sp.load(context, R.raw.countdown, 1); 
@@ -341,17 +365,56 @@ public class Panel extends SurfaceView implements Callback  {
 	public void drawButtons(Canvas canvas){
 
 		//Draw Buttons
-
 		Paint paint = new Paint();
 		canvas.drawBitmap(cRotate, clockwiseX, clockwiseY, paint);
 		canvas.drawBitmap(ccRotate, counterX, counterY, paint);
 		canvas.drawBitmap(fire, fireX, fireY, paint);
 		canvas.drawBitmap(RotateBitmap(shipBitMap, shipCont.getRotation()), mWidth/2 - (shipBitMap.getWidth()/2), mHeight/2 - (shipBitMap.getHeight()/2), paint);
 
+		// Draw Score
 		paint.setColor(Color.WHITE); 
-		paint.setTextSize(50); 
-		canvas.drawText("Score: ", canvas.getWidth()-300, 75, paint); 
-		canvas.drawText(Integer.toString(game.getUser().getScore()), canvas.getWidth()-100, 75, paint); 
+		paint.setTextSize(30); 
+		canvas.drawText("Score: ", canvas.getWidth()-250, 25, paint); 
+		canvas.drawText(Integer.toString(game.getUser().getScore()), canvas.getWidth()-150, 25, paint); 
+		
+		// Draw Health Meter
+		
+		canvas.drawText("Health: ", canvas.getWidth()-600, 25, paint);
+		int buffer = 500;
+		
+		
+	
+			for (int i =0; i < game.getShip().getHitpoints(); i++)
+			{			
+				if ( game.getShip().getHitpoints() > 4 )
+				{
+					// use green
+					temp = greenHealth;
+				}
+				
+				if ( game.getShip().getHitpoints() == 3)
+				{
+					// use yellow  
+					temp = yellowHealth;
+				}
+				if ( game.getShip().getHitpoints() == 2)
+				{
+					// use  orange
+					temp = orangeHealth;
+				}
+				
+				if ( game.getShip().getHitpoints() == 1)
+				{
+					// use  red
+					temp = redHealth;
+				}
+				
+				
+				canvas.drawBitmap(temp, canvas.getWidth()- (buffer -10),0, new Paint());
+				buffer -= temp.getWidth();
+			}
+			
+	
 
 	}
 
@@ -363,134 +426,123 @@ public class Panel extends SurfaceView implements Callback  {
 			if(rotate){
 				canvas.drawBitmap(RotateBitmap(shipBitMap, shipCont.getRotation()), mWidth/2 - (shipBitMap.getWidth()/2), mHeight/2 - (shipBitMap.getHeight()/2), new Paint());
 			}
-			
-			
+
+
 			Paint paint = new Paint(); 
 			paint.setColor(Color.RED); 
 			for(int i = 0; i < projectiles.length; i++){
 				canvas.drawBitmap(ballBitMap, ((Projectile) projectiles[i]).getX(), ((Projectile) projectiles[i]).getY(), new Paint());  
 			}
+
+
+			for(int i = 0; i < asteroidCont.getAsteroidList().length; i++){
+				int size = ((Asteroid) asteroids[i]).getSize();
+
+				if(size == 1){
+					canvas.drawBitmap(asteroidSmall, ((Asteroid) asteroids[i]).getLocation().getX(), ((Asteroid) asteroids[i]).getLocation().getY(),  new Paint());
+				}
+
+				else if(size == 2){
+					canvas.drawBitmap(asteroidMedium, ((Asteroid) asteroids[i]).getLocation().getX(), ((Asteroid) asteroids[i]).getLocation().getY(),  new Paint());
+				}
+
+				else{
+					canvas.drawBitmap(asteroidLarge, ((Asteroid) asteroids[i]).getLocation().getX(), ((Asteroid) asteroids[i]).getLocation().getY(),  new Paint());
+				}
+			}
+
+			drawButtons(canvas); 
+		}
+
+
+	}
+
+
+	public static Bitmap RotateBitmap(Bitmap source, float angle)
+	{
+		Matrix matrix = new Matrix();
+		matrix.postTranslate(0 , 0); 
+		matrix.postRotate(angle);
+		matrix.postTranslate(mWidth/2 - (source.getWidth()/2), mHeight/2 - (source.getHeight()/2)); 
+		return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+	}
+
+
+	@SuppressLint("NewApi")
+	public void update() {
+
+		//if(!countdown){
+		if(button == ButtonType.CLOCKWISE){
+			shipCont.rotateShip(dThetaR * pressure); 
+		}
+
+		else if(button == ButtonType.COUNTERCLOCKWISE){
+			shipCont.rotateShip(-dThetaL * pressure); 
+		}
+
+
+		projCont.updateProjectiles(mWidth, mHeight); 
+		projectiles = projCont.getProjectileCoords(); 
+
+		asteroidCont.update();
+		asteroids = asteroidCont.getAsteroidList(); 
+
+		asteroidCont.fireCollision();
+		asteroidCont.asteroidCollision();
+		asteroidCont.shipToAsteroidCollision();
+
+		if(game.getShip().getHitpoints() < 1)
+		{
+			game.getShip().setHitpoints(6);
+
+		}
+
+		if (game.checkEndGame())
+		{
+			
+			/*Intent gameover = new Intent (context, GameOver.class);
+			context.startActivity(gameover);	*/
+			Log.d("Panel", "GAME OVER");
+		}
 		
+	}
 
-		for(int i = 0; i < asteroidCont.getAsteroidList().length; i++){
-			int size = ((Asteroid) asteroids[i]).getSize();
+	@Override
+	public void surfaceChanged(SurfaceHolder holder, int format, int width,
+			int height) {
+	}
 
-			if(size == 1){
-				canvas.drawBitmap(asteroidSmall, ((Asteroid) asteroids[i]).getLocation().getX(), ((Asteroid) asteroids[i]).getLocation().getY(),  new Paint());
-			}
+	@Override
+	public void surfaceCreated(SurfaceHolder holder) {
+		// at this point the surface is created and
+		// we can safely start the game loop
 
-			else if(size == 2){
-				canvas.drawBitmap(asteroidMedium, ((Asteroid) asteroids[i]).getLocation().getX(), ((Asteroid) asteroids[i]).getLocation().getY(),  new Paint());
-			}
+		thread.setRunning(true);
+		thread.start();
 
-			else{
-				canvas.drawBitmap(asteroidLarge, ((Asteroid) asteroids[i]).getLocation().getX(), ((Asteroid) asteroids[i]).getLocation().getY(),  new Paint());
+	}
+
+	@Override
+	public void surfaceDestroyed(SurfaceHolder holder) {
+		///Log.d(TAG, "Surface is being destroyed");
+		// tell the thread to shut down and wait for it to finish
+		// this is a clean shutdown
+		boolean retry = true;
+
+
+		while (retry) {
+			try {
+				thread.join();
+
+				retry = false;
+			} catch (InterruptedException e) {
+				// try again shutting down the thread
 			}
 		}
-
-		drawButtons(canvas); 
+		Log.d(TAG, "Thread was shut down cleanly");
 	}
 
-
-}
-
-
-public static Bitmap RotateBitmap(Bitmap source, float angle)
-{
-	Matrix matrix = new Matrix();
-	matrix.postTranslate(0 , 0); 
-	matrix.postRotate(angle);
-	matrix.postTranslate(mWidth/2 - (source.getWidth()/2), mHeight/2 - (source.getHeight()/2)); 
-	return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
-}
-
-
-@SuppressLint("NewApi")
-public void update() {
-
-	//if(!countdown){
-	if(button == ButtonType.CLOCKWISE){
-		shipCont.rotateShip(dThetaR * pressure); 
-	}
-
-	else if(button == ButtonType.COUNTERCLOCKWISE){
-		shipCont.rotateShip(-dThetaL * pressure); 
-	}
-
-
-	projCont.updateProjectiles(mWidth, mHeight); 
-	projectiles = projCont.getProjectileCoords(); 
-
-	asteroidCont.update();
-	asteroids = asteroidCont.getAsteroidList(); 
-
-	asteroidCont.fireCollision();
-	asteroidCont.asteroidCollision();
-	asteroidCont.shipToAsteroidCollision();
-
-	if(game.getShip().getHitpoints() < 1)
-	{
-		game.getShip().loseLife();
-		game.getShip().setHitpoints(5);
-
-	}
-
-	if (game.checkEndGame())
-	{
-		//Toast.makeText(context, "GAME OVER", Toast.LENGTH_LONG);
-		Log.d("Panel", "GAME OVER");
-
-		//Intent intent = new Intent(context, LeaderboardActivity.class);
-		//startActionMode((android.view.ActionMode.Callback) intent); 
-		try {
-			Intent i1 = new Intent (context, LeaderboardActivity.class);
-			context.startActivity(i1);
-			thread.join();
-
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	//}
-}
-
-@Override
-public void surfaceChanged(SurfaceHolder holder, int format, int width,
-		int height) {
-}
-
-@Override
-public void surfaceCreated(SurfaceHolder holder) {
-	// at this point the surface is created and
-	// we can safely start the game loop
-
-	thread.setRunning(true);
-	thread.start();
-
-}
-
-@Override
-public void surfaceDestroyed(SurfaceHolder holder) {
-	///Log.d(TAG, "Surface is being destroyed");
-	// tell the thread to shut down and wait for it to finish
-	// this is a clean shutdown
-	boolean retry = true;
-
-
-	while (retry) {
-		try {
-			thread.join();
-
-			retry = false;
-		} catch (InterruptedException e) {
-			// try again shutting down the thread
-		}
-	}
-	Log.d(TAG, "Thread was shut down cleanly");
-}
-
-private static enum ButtonType{
-	CLOCKWISE, COUNTERCLOCKWISE, FIRE, NONE
-}; 
+	private static enum ButtonType{
+		CLOCKWISE, COUNTERCLOCKWISE, FIRE, NONE
+	}; 
 }

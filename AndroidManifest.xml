@@ -47,6 +47,10 @@
             android:name="edu.ycp.cs496.main.SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
+        <activity
+            android:name="edu.ycp.cs496.main.GameOver"
+            android:label="@string/title_activity_game_over" >
+        </activity>
     </application>
 
 </manifest>
