@@ -21,8 +21,8 @@ public class Ship extends User {
 		this.y = y; 
 		theta = 0; 
 		// INITIALIZE DIRECTION
-		hitpoints = 10;
-		radius = 1;
+		hitpoints = 5;
+		radius = 40;
 		lives = 2;
 		
 		projectiles = new ArrayList<Projectile>(); 
@@ -59,6 +59,10 @@ public class Ship extends User {
 	
 	public int getHitpoints(){
 		return hitpoints; 
+	}
+	
+	public void setHitpoints(int points){
+		hitpoints = points; 
 	}
 	
 	public void rotate(float dTheta){

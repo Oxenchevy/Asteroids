@@ -3,7 +3,7 @@ package edu.ycp.cs496.asteroids.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.R;
+
 import edu.ycp.cs496.asteroids.model.Asteroid;
 import edu.ycp.cs496.asteroids.model.Game;
 import edu.ycp.cs496.asteroids.model.Location;
@@ -16,7 +16,7 @@ public class AsteroidController {
 	private int medWidth; 
 	private int largeWidth; 
 	private List<Asteroid> asteroids; 
-	
+
 	public AsteroidController(){
 		game = AsteroidsSingleton.getGame(); 
 		smallWidth = AsteroidsSingleton.getSmallAsteroidWidth(); 
@@ -24,18 +24,18 @@ public class AsteroidController {
 		largeWidth = AsteroidsSingleton.getLargeAsteroidWidth(); 
 		asteroids = game.getAsteroids(); 
 	}
-	
+
 	public void update() {
 
-		
+
 		asteroids = game.getAsteroids(); 
-		
+
 		if(asteroids.isEmpty()) {
 			// Increment the game level.
 			game.nextLevel(); 
 
 			// Repopulate list of asteroids based on current level.
-			for(int i = 0; i < 3*game.getLevel(); i++) {
+			for(int i = 0; i < 8*game.getLevel(); i++) {
 				// Spawn an asteroid with random attributes at a random location on the edge of the map.
 				asteroids.add(new Asteroid(smallWidth, medWidth, largeWidth));
 			}
@@ -51,13 +51,14 @@ public class AsteroidController {
 
 					switch(asteroid.getSize()) {
 					case 3: // If a LARGE asteroid, then spawn two MEDIUM asteroids at its location.
-						updatedAsteroids.add(new Asteroid(2, new Location(asteroid.getLocation().getX()-5, asteroid.getLocation().getY()-5)));
-						updatedAsteroids.add(new Asteroid(2, new Location(asteroid.getLocation().getX()+5, asteroid.getLocation().getY()+5)));
+						updatedAsteroids.add(new Asteroid(2, new Location(asteroid.getLocation().getX() - (medWidth +5), asteroid.getLocation().getY()-(medWidth -5))));
+						updatedAsteroids.add(new Asteroid(2, new Location(asteroid.getLocation().getX() + (medWidth +5), asteroid.getLocation().getY()+(medWidth -5))));
+
 						game.getUser().addToScore(3); 
 						break;
 					case 2: // If a MEDIUM asteroid, then spawn two SMALL asteroids at its location.
-						updatedAsteroids.add(new Asteroid(1, new Location(asteroid.getLocation().getX()-5,asteroid.getLocation().getY()-5)));
-						updatedAsteroids.add(new Asteroid(1, new Location(asteroid.getLocation().getX()+5,asteroid.getLocation().getY()+5)));
+						updatedAsteroids.add(new Asteroid(1, new Location(asteroid.getLocation().getX() - ( smallWidth + 5),asteroid.getLocation().getY()-( smallWidth - 5))));
+						updatedAsteroids.add(new Asteroid(1, new Location(asteroid.getLocation().getX() + ( smallWidth + 5),asteroid.getLocation().getY()+( smallWidth + 5))));
 						game.getUser().addToScore(2); 
 						break;
 					case 1: // If a SMALL asteroid, then simply add its value to score tally.
@@ -72,9 +73,9 @@ public class AsteroidController {
 
 			// Point to the updated list (garbage collection will get rid of the old one).
 			asteroids = updatedAsteroids;
-			
+
 			game.setAsteroids(asteroids); 
-			
+
 			// Check to see if asteroids are moving off-screen.
 			for(Asteroid asteroid : asteroids) {
 				asteroid.updateLocation(); 
@@ -89,10 +90,10 @@ public class AsteroidController {
 		return asteroids.toArray(); 
 	}
 
-	public void removeAsteroid(int index)
+	/*	public void removeAsteroid(int index)
 	{
 		asteroids.remove(index);
-	}
+	}*/
 
 	public void fireCollision()
 	{
@@ -139,7 +140,7 @@ public class AsteroidController {
 								((Asteroid) asteroids[j]).getRadius());
 				if(collision)
 				{				
-				//	System.out.println("Collision occured");
+					//	System.out.println("Collision occured");
 					((Asteroid) asteroids[j]).setDx();
 					((Asteroid) asteroids[i]).setDx();
 					((Asteroid) asteroids[j]).setDy();
@@ -149,4 +150,45 @@ public class AsteroidController {
 		}
 	}
 
+	public void shipToAsteroidCollision()
+	{
+		Object[] asteroids  = getAsteroidList();
+
+		for(int i=0; i<getAsteroidList().length; i++)
+		{
+			double xDif = ((Asteroid) asteroids[i]).getLocation().getX() - game.getShip().getx();
+			double yDif = ((Asteroid) asteroids[i]).getLocation().getY() - game.getShip().gety();
+			double distanceSquared = xDif * xDif + yDif * yDif;
+
+			boolean collision = distanceSquared < (((Asteroid) asteroids[i]).getRadius() + 
+					game.getShip().getRadius()) *(((Asteroid) asteroids[i]).getRadius() + 
+							game.getShip().getRadius());
+			if(collision)
+			{				
+				((Asteroid) asteroids[i]).setDx();
+				((Asteroid) asteroids[i]).setDy();
+				System.out.println("COLLISION");
+				
+				int size = ((Asteroid) asteroids[i]).getSize();		
+			
+				switch(size) {
+				case 3: // If a LARGE asteroid, lose 3 hitpoints
+					game.getShip().loseHitpoint();
+					game.getShip().loseHitpoint();
+					game.getShip().loseHitpoint();
+					break;
+				case 2: // If a MEDIUM asteroid, lose 2 hitpoints
+				
+					game.getShip().loseHitpoint();
+					game.getShip().loseHitpoint();
+					break;
+				case 1: // If a SMALL asteroid, lose 1 hitpoints
+					game.getShip().loseHitpoint();
+				
+				}
+				
+
+			}
+		}
+	}
 }

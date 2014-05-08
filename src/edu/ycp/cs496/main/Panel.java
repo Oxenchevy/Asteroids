@@ -9,9 +9,11 @@ import edu.ycp.cs496.asteroids.controllers.ProjectileController;
 import edu.ycp.cs496.asteroids.controllers.ShipController;
 import edu.ycp.cs496.asteroids.model.Asteroid;
 import edu.ycp.cs496.asteroids.model.Game;
+import android.app.Activity;
 import edu.ycp.cs496.asteroids.model.Projectile;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -25,7 +27,9 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 
 
@@ -293,7 +297,6 @@ public class Panel extends SurfaceView implements Callback  {
 		paint.setColor(Color.RED); 
 		for(int i = 0; i < projectiles.length; i++){
 			canvas.drawBitmap(ballBitMap, ((Projectile) projectiles[i]).getX(), ((Projectile) projectiles[i]).getY(), new Paint());  
-			//canvas.drawCircle(((Projectile) projectiles[i]).getX(), ((Projectile) projectiles[i]).getY(), ((Projectile) projectiles[i]).getRadius(), paint); 
 		}
 
 		for(int i = 0; i < asteroidCont.getAsteroidList().length; i++){
@@ -307,7 +310,7 @@ public class Panel extends SurfaceView implements Callback  {
 				canvas.drawBitmap(asteroidMedium, ((Asteroid) asteroids[i]).getLocation().getX(), ((Asteroid) asteroids[i]).getLocation().getY(),  new Paint());
 			}
 
-			else{
+			else if (size == 3){
 				canvas.drawBitmap(asteroidLarge, ((Asteroid) asteroids[i]).getLocation().getX(), ((Asteroid) asteroids[i]).getLocation().getY(),  new Paint());
 			}
 
@@ -329,6 +332,7 @@ public class Panel extends SurfaceView implements Callback  {
 	}
 
 
+	@SuppressLint("NewApi")
 	public void update() {
 
 		if(button == ButtonType.CLOCKWISE){
@@ -348,6 +352,39 @@ public class Panel extends SurfaceView implements Callback  {
 		
 		asteroidCont.fireCollision();
 		asteroidCont.asteroidCollision();
+		asteroidCont.shipToAsteroidCollision();
+		
+		if(game.getShip().getHitpoints() < 1)
+		{
+			game.getShip().loseLife();
+			game.getShip().setHitpoints(5);
+			
+		}
+	
+		if (game.checkEndGame())
+		{
+			//Toast.makeText(context, "GAME OVER", Toast.LENGTH_LONG);
+			Log.d("Panel", "GAME OVER");
+		
+				//Intent intent = new Intent(context, LeaderboardActivity.class);
+				//startActionMode((android.view.ActionMode.Callback) intent); 
+			try {
+				 Intent i1 = new Intent (context, LeaderboardActivity.class);
+		         context.startActivity(i1);
+				thread.join();
+			
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+			
+			
+			
+			
+			
+			
+		
+		}
 	}
 
 	@Override

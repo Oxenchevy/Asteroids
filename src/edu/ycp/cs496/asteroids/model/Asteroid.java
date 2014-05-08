@@ -13,11 +13,10 @@ public class Asteroid {
 	private int hitpoints, size, radius, speed;
 	private float theta; 
 	private int smallWidth, medWidth, largeWidth; 
+	Random rand = new Random();
 	// Constructor for asteroids with random attributes.
 	public Asteroid(int smallWidth, int medWidth, int largeWidth) {
 		location = new Location(0,0);
-		//direction.genRandomDirection();
-
 		Random rand = new Random();
 		size = rand.nextInt(3)+1;
 		hitpoints = size;
@@ -60,14 +59,15 @@ public class Asteroid {
 		}
 	}
 
-	public Asteroid(int size, Location location) {
-		this.location = location;
-		//direction.genRandomDirection();
+	public Asteroid(int size, Location loc) {
+		this.location = loc;
 		this.size = size;
-		hitpoints = size * 2;
+		hitpoints = size;
 		radius = size;
 		
-		Random rand = new Random();
+		location.setX(location.getX());
+		location.setY(location.getY());	
+	
 		theta = rand.nextInt(360); 
 
 		dx = (float) Math.sin(Math.toRadians(theta)) * speed;
@@ -76,8 +76,9 @@ public class Asteroid {
 		switch(size) {
 		case 1: speed = 3; break;
 		case 2: speed = 2; break;
-		case 3: speed = 1; break;
+		case 3: speed = 1; break;		
 		}
+		updateLocation();
 	}
 
 	public Location getLocation() {

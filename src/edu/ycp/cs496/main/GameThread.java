@@ -44,8 +44,6 @@ public class GameThread extends Thread {
 			try{
 				canvas = this.mHolder.lockCanvas();
 				synchronized (mHolder) {
-				 
-
 
 					mStartTime = System.currentTimeMillis();
 					framesSkipped = 0;
