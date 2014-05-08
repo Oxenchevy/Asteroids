@@ -461,9 +461,9 @@ public class Panel extends SurfaceView implements Callback  {
 	public static Bitmap RotateBitmap(Bitmap source, float angle)
 	{
 		Matrix matrix = new Matrix();
-		matrix.postTranslate(0 , 0); 
+		//matrix.postTranslate(0 , 0); 
 		matrix.postRotate(angle);
-		matrix.postTranslate(mWidth/2 - (source.getWidth()/2), mHeight/2 - (source.getHeight()/2)); 
+		//matrix.postTranslate(mWidth/2 - (source.getWidth()/2), mHeight/2 - (source.getHeight()/2)); 
 		return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
 	}
 
