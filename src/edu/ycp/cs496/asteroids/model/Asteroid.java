@@ -76,20 +76,12 @@ public class Asteroid {
 		case 3: speed = 2; radius = largeWidth/2; break;
 		}
 		
-		location.setX(location.getX());
-		location.setY(location.getY());	
-	
 		theta = rand.nextInt(360); 
 
 		dx = (float) Math.sin(Math.toRadians(theta)) * speed;
 		dy = -(float) Math.cos(Math.toRadians(theta)) * speed;
 
-		switch(size) {
-		case 1: speed = 3; break;
-		case 2: speed = 2; break;
-		case 3: speed = 1; break;		
-		}
-		updateLocation();
+		//updateLocation();
 	}
 
 	public Location getLocation() {

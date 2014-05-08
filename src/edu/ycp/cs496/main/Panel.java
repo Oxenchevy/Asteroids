@@ -222,9 +222,7 @@ public class Panel extends SurfaceView implements Callback  {
 			if(countdown){
 				int count = (int) elapsed / 1000; 
 				count = 5 - count; 
-				System.out.println("count " + count); 
 				canvas.drawText(Integer.toString(count), mWidth/2, mHeight/2, p); 
-
 
 				if(elapsed > 5000){
 					canvas.drawColor(Color.BLACK);

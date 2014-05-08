@@ -118,6 +118,7 @@ public class LeaderboardActivity extends Activity {
 		Log.d(" ", "SDV"); 
 		try {
 			getLeaderboard();
+			
 		}
 		catch (Exception e) {
 			e.printStackTrace();
