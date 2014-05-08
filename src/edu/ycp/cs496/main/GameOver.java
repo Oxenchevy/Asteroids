@@ -32,17 +32,7 @@ public class GameOver extends Activity {
 		game = AsteroidsSingleton.getGame();
 		TextView finalScore = (TextView)findViewById(R.id.finalScore); 
 		finalScore.setText(Integer.toString(game.getUser().getScore()));
-		
-		AsteroidsSingleton.getInstance();
-		GameThread thread = AsteroidsSingleton.getThread();
-		
-		try {
-			thread.join();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+				
 		Button menu = (Button) findViewById(R.id.Menubtn);		
 		menu.setOnClickListener(new View.OnClickListener(){
 

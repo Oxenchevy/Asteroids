@@ -27,6 +27,8 @@ public class AsteroidView extends Activity  {
 	
 		
 		setContentView(new Panel(this));
+		
+		
 	}
 
 
