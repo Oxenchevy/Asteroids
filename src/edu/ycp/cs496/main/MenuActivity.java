@@ -51,7 +51,15 @@ public class MenuActivity extends Activity {
 		});  	
 			*/	
 				
-		
+		ImageView scores = (ImageView) findViewById(R.id.imageView3); 
+		scores.setOnClickListener(new View.OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getBaseContext(), LeaderboardActivity.class);
+				startActivity(intent); 
+			}	
+		});  	
 	}
 
 }
