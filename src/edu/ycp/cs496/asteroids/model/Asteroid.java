@@ -3,6 +3,7 @@ package edu.ycp.cs496.asteroids.model;
 import java.util.Random;
 
 import android.graphics.Path.Direction;
+import edu.ycp.cs496.asteroids.controllers.AsteroidsSingleton;
 import edu.ycp.cs496.main.Panel;
 
 public class Asteroid {
@@ -15,15 +16,15 @@ public class Asteroid {
 	private int smallWidth, medWidth, largeWidth; 
 	Random rand = new Random();
 	// Constructor for asteroids with random attributes.
-	public Asteroid(int smallWidth, int medWidth, int largeWidth) {
+	public Asteroid() {
 		location = new Location(0,0);
 		Random rand = new Random();
 		size = rand.nextInt(3)+1;
 		hitpoints = size;
 		
-		this.smallWidth = smallWidth; 
-		this.medWidth = medWidth; 
-		this.largeWidth = largeWidth; 
+		this.smallWidth = AsteroidsSingleton.getSmallAsteroidWidth(); 
+		this.medWidth = AsteroidsSingleton.getMedAsteroidWidth();  
+		this.largeWidth = AsteroidsSingleton.getLargeAsteroidWidth(); 
 
 		switch(size) {
 		case 1: speed = 6; radius = smallWidth/2; break;
@@ -34,7 +35,7 @@ public class Asteroid {
 		theta = rand.nextInt(360); 
 
 		dx = (float) Math.sin(Math.toRadians(theta)) * speed;
-		dy = (float) Math.cos(Math.toRadians(theta)) * speed;
+		dy = -(float) Math.cos(Math.toRadians(theta)) * speed;
 
 		int locgen = rand.nextInt(4)+1;
 
@@ -65,13 +66,23 @@ public class Asteroid {
 		hitpoints = size;
 		radius = size;
 		
+		this.smallWidth = AsteroidsSingleton.getSmallAsteroidWidth(); 
+		this.medWidth = AsteroidsSingleton.getMedAsteroidWidth();  
+		this.largeWidth = AsteroidsSingleton.getLargeAsteroidWidth(); 
+
+		switch(size) {
+		case 1: speed = 6; radius = smallWidth/2; break;
+		case 2: speed = 4; radius = medWidth/2; break;
+		case 3: speed = 2; radius = largeWidth/2; break;
+		}
+		
 		location.setX(location.getX());
 		location.setY(location.getY());	
 	
 		theta = rand.nextInt(360); 
 
 		dx = (float) Math.sin(Math.toRadians(theta)) * speed;
-		dy = (float) Math.cos(Math.toRadians(theta)) * speed;
+		dy = -(float) Math.cos(Math.toRadians(theta)) * speed;
 
 		switch(size) {
 		case 1: speed = 3; break;
@@ -114,6 +125,31 @@ public class Asteroid {
 			return true;
 		else 
 			return false;
+	}
+	
+	
+	public void respondToCollision(Asteroid a){
+		theta = 360 - theta; 
+		
+		if(dx > 0 && a.getDx() < 0){
+			setDx(); 
+			a.setDx(); 
+		}
+		if(dx < 0 && a.getDx() > 0){
+			setDx(); 
+			a.setDx(); 
+		}
+		if(dy < 0 && a.getDy() < 0){
+			setDy(); 
+			a.setDy(); 
+		}
+		if(dy > 0 && a.getDy() > 0){
+			setDy(); 
+			a.setDy(); 
+		}
+		
+		//dx = (float) Math.sin(Math.toRadians(theta)) * speed;
+		//dy = -(float) Math.cos(Math.toRadians(theta)) * speed;
 	}
 
 	public float getDx(){

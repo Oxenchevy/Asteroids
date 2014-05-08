@@ -18,7 +18,9 @@ public class GameThread extends Thread {
 	private long mElapsed;
 	private int framesSkipped; 
 	private int sleepTime; 
-
+	private long countdownElapsed; 
+	private long countElapsed; 
+	private boolean countdown; 
 
 	public void setRunning(boolean running) {
 		this.mRun = running;
@@ -28,27 +30,33 @@ public class GameThread extends Thread {
 		super();
 		this.mHolder = surfaceHolder;
 		this.mPanel = gamePanel;
-
+		mElapsed = 0; 
+		countdownElapsed = 0; 
 	}
-
+	
+	
 	@Override
 	public void run() {
 		Canvas canvas; 
 		Log.d(TAG, "Starting game loop");
 
 		sleepTime = 0;
-
+	
+		long start = System.currentTimeMillis(); 
 		while (mRun) {
 			canvas = null; 
-
+			
 			try{
 				canvas = this.mHolder.lockCanvas();
+				
 				synchronized (mHolder) {
 
 					mStartTime = System.currentTimeMillis();
 					framesSkipped = 0;
 					this.mPanel.update();
-					this.mPanel.render(canvas);				
+					countdownElapsed = System.currentTimeMillis(); 
+					this.mPanel.countDown(countdownElapsed - start, canvas); 
+					this.mPanel.render(canvas);
 					// calculate how long did the cycle take
 					mElapsed = System.currentTimeMillis() - mStartTime;
 					// calculate sleep time
