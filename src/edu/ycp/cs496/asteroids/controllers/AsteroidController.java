@@ -139,9 +139,11 @@ public class AsteroidController {
 								((Asteroid) asteroids[j]).getRadius());
 				if(collision)
 				{				
-					System.out.println("Collision occured");
+				//	System.out.println("Collision occured");
 					((Asteroid) asteroids[j]).setDx();
 					((Asteroid) asteroids[i]).setDx();
+					((Asteroid) asteroids[j]).setDy();
+					((Asteroid) asteroids[i]).setDy();
 				}
 			}
 		}

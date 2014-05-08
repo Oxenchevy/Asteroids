@@ -41,7 +41,7 @@ public class MenuActivity extends Activity {
 		});  
 				
 		ImageView settings = (ImageView) findViewById(R.id.imageView4); 
-		settings.setOnClickListener(new View.OnClickListener(){
+		/*settings.setOnClickListener(new View.OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
@@ -49,7 +49,7 @@ public class MenuActivity extends Activity {
 				startActivity(intent); 
 			}	
 		});  	
-				
+			*/	
 				
 		
 	}

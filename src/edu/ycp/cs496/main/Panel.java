@@ -268,10 +268,18 @@ public class Panel extends SurfaceView implements Callback  {
 	public void drawButtons(Canvas canvas){
 
 		//Draw Buttons
-		canvas.drawBitmap(cRotate, clockwiseX, clockwiseY, new Paint());
-		canvas.drawBitmap(ccRotate, counterX, counterY, new Paint());
-		canvas.drawBitmap(fire, fireX, fireY, new Paint());
-		canvas.drawBitmap(RotateBitmap(shipBitMap, shipCont.getRotation()), mWidth/2 - (shipBitMap.getWidth()/2), mHeight/2 - (shipBitMap.getHeight()/2), new Paint());
+		
+		Paint paint = new Paint();
+		canvas.drawBitmap(cRotate, clockwiseX, clockwiseY, paint);
+		canvas.drawBitmap(ccRotate, counterX, counterY, paint);
+		canvas.drawBitmap(fire, fireX, fireY, paint);
+		canvas.drawBitmap(RotateBitmap(shipBitMap, shipCont.getRotation()), mWidth/2 - (shipBitMap.getWidth()/2), mHeight/2 - (shipBitMap.getHeight()/2), paint);
+	
+		paint.setColor(Color.WHITE); 
+		paint.setTextSize(20); 
+		canvas.drawText("Score: ", canvas.getWidth()-300, 30, paint); 
+		canvas.drawText(Integer.toString(game.getUser().getScore()), canvas.getWidth()-200, 30, paint); 
+	
 	}
 
 	public void render(Canvas canvas) {
