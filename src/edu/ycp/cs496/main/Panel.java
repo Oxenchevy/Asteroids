@@ -22,11 +22,13 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.media.SoundPool.OnLoadCompleteListener;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -67,7 +69,7 @@ public class Panel extends SurfaceView implements Callback  {
 	private Bitmap yellowHealth;
 	private Bitmap orangeHealth;
 	private Bitmap redHealth;
-	
+
 	Bitmap temp;
 
 	//Controllers
@@ -93,6 +95,7 @@ public class Panel extends SurfaceView implements Callback  {
 	private Object[] asteroids; 
 	private boolean countdown; 
 	private boolean countSound; 
+	private SparseArray<PointF> mActivePointers = new SparseArray<PointF>();
 
 	@SuppressLint("NewApi")
 	public Panel(Context context) {
@@ -110,7 +113,7 @@ public class Panel extends SurfaceView implements Callback  {
 				//  System.out.println(t + " throws exception: " + e);
 			}
 		});
-		
+
 		AsteroidsSingleton.getInstance();
 		AsteroidsSingleton.setThread(thread);
 
@@ -139,21 +142,21 @@ public class Panel extends SurfaceView implements Callback  {
 		//asteroidMedium = Bitmap.createScaledBitmap(asteroidMedium, asteroidMedium.getWidth() * 2, asteroidMedium.getHeight() * 2, true); 
 		asteroidLarge = BitmapFactory.decodeResource(getResources(), R.drawable.image_asteroid_large);
 		//asteroidLarge = Bitmap.createScaledBitmap(asteroidLarge, asteroidLarge.getWidth() * 2, asteroidLarge.getHeight() * 2, true); 
-		
-		
+
+
 		greenHealth = BitmapFactory.decodeResource(getResources(), R.drawable.green_health);
 		greenHealth = Bitmap.createScaledBitmap(greenHealth, greenHealth.getWidth() /4, greenHealth.getHeight() / 4, true);
-		
+
 		orangeHealth = BitmapFactory.decodeResource(getResources(), R.drawable.orange_health);
 		orangeHealth = Bitmap.createScaledBitmap(orangeHealth, orangeHealth.getWidth() /4, orangeHealth.getHeight() / 4, true);
-		
+
 		yellowHealth = BitmapFactory.decodeResource(getResources(), R.drawable.yellow_health);
 		yellowHealth = Bitmap.createScaledBitmap(yellowHealth, yellowHealth.getWidth() /4, yellowHealth.getHeight() / 4, true);
-		
+
 		redHealth = BitmapFactory.decodeResource(getResources(), R.drawable.red_health);
 		redHealth = Bitmap.createScaledBitmap(redHealth, redHealth.getWidth() /4, redHealth.getHeight() / 4, true);
-		
-		
+
+
 		temp = greenHealth;
 		//Media
 		/*sp = new SoundPool(5, AudioManager.STREAM_MUSIC, 0); 
@@ -243,26 +246,92 @@ public class Panel extends SurfaceView implements Callback  {
 	@Override
 	public boolean onTouchEvent(MotionEvent ev){
 
+		System.out.println(ev.getPointerCount());
+		int pointerIndex = ev.getActionIndex();
 
-		float x = ev.getX(); 
-		float y = ev.getY(); 
+		// get pointer ID
+		int pointerId = ev.getPointerId(pointerIndex);
+
+
+
+
+		// We have a new pointer. Lets add it to the list of pointers
+
+		PointF f = new PointF();
+		f.x = ev.getX(pointerIndex);
+		f.y = ev.getY(pointerIndex);
+		mActivePointers.put(pointerId, f);
+
+		int size = mActivePointers.size();
+
+		if (size == 1)
+		{
+			float x = mActivePointers.get(0).x;//ev.getX(); 
+			float y = mActivePointers.get(0).y; 
+			pressure = 1; //ev.getPressure() * 2; 
+
+			if(buttonHits(x, y) == ButtonType.CLOCKWISE){
+				rotate = true;
+				button = ButtonType.CLOCKWISE; 
+
+				cRotate = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotateclockwise_press);
+			}
+
+			if(buttonHits(x, y) == ButtonType.COUNTERCLOCKWISE){
+				rotate = true; 
+				button = ButtonType.COUNTERCLOCKWISE;
+
+				ccRotate = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotatecounter_press);
+			}
+
+			if(buttonHits(x, y) == ButtonType.FIRE){
+				//Log.d(TAG, "FIRE!"); 
+				button = ButtonType.FIRE;
+				fire(); 
+
+				fire = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_fire_press);
+			}
+
+			if(buttonHits(x, y) == ButtonType.NONE){
+				//Log.d(TAG, "BLEH"); 
+				button = ButtonType.NONE;
+			}
+			if(ev.getAction() == MotionEvent.ACTION_UP){
+				rotate = false;
+				button = ButtonType.NONE;
+				//Log.d(TAG, "UP!"); 
+
+				cRotate = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotateclockwise);
+				ccRotate = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotatecounter);
+				fire = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_fire);
+				mActivePointers.remove(0);
+				
+			}
+
+		}
+		
+	if (size == 2)
+	{
+	
+		float x2 = mActivePointers.get(1).x;
+		float y2 = mActivePointers.get(1).y;
 		pressure = 1; //ev.getPressure() * 2; 
 
-		if(buttonHits(x, y) == ButtonType.CLOCKWISE){
+		if(buttonHits(x2, y2) == ButtonType.CLOCKWISE){
 			rotate = true;
 			button = ButtonType.CLOCKWISE; 
 
 			cRotate = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotateclockwise_press);
 		}
 
-		if(buttonHits(x, y) == ButtonType.COUNTERCLOCKWISE){
+		if(buttonHits(x2, y2) == ButtonType.COUNTERCLOCKWISE ){
 			rotate = true; 
 			button = ButtonType.COUNTERCLOCKWISE;
 
 			ccRotate = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotatecounter_press);
 		}
 
-		if(buttonHits(x, y) == ButtonType.FIRE){
+		if(buttonHits(x2, y2) == ButtonType.FIRE){
 			//Log.d(TAG, "FIRE!"); 
 			button = ButtonType.FIRE;
 			fire(); 
@@ -270,21 +339,24 @@ public class Panel extends SurfaceView implements Callback  {
 			fire = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_fire_press);
 		}
 
-		if(buttonHits(x, y) == ButtonType.NONE){
+		if(buttonHits(x2, y2) == ButtonType.NONE){
 			//Log.d(TAG, "BLEH"); 
 			button = ButtonType.NONE;
 		}
+	
+			if(ev.getAction() == MotionEvent.ACTION_UP){
+				rotate = false;
+				button = ButtonType.NONE;
+				mActivePointers.remove(0);
+				mActivePointers.remove(1);
+				//Log.d(TAG, "UP!"); 
 
-
-		if(ev.getAction() == MotionEvent.ACTION_UP){
-			rotate = false;
-			button = ButtonType.NONE;
-			//Log.d(TAG, "UP!"); 
-
-			cRotate = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotateclockwise);
-			ccRotate = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotatecounter);
-			fire = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_fire);
-		}
+				cRotate = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotateclockwise);
+				ccRotate = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotatecounter);
+				fire = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_fire);
+			}
+		
+	}
 		return true; 
 
 	}
@@ -376,45 +448,44 @@ public class Panel extends SurfaceView implements Callback  {
 		paint.setTextSize(30); 
 		canvas.drawText("Score: ", canvas.getWidth()-250, 25, paint); 
 		canvas.drawText(Integer.toString(game.getUser().getScore()), canvas.getWidth()-150, 25, paint); 
-		
+
 		// Draw Health Meter
-		
+
 		canvas.drawText("Health: ", canvas.getWidth()-600, 25, paint);
 		int buffer = 500;
-		
-		
-	
-			for (int i =0; i < game.getShip().getHitpoints(); i++)
-			{			
-				if ( game.getShip().getHitpoints() > 4 )
-				{
-					// use green
-					temp = greenHealth;
-				}
-				
-				if ( game.getShip().getHitpoints() == 3)
-				{
-					// use yellow  
-					temp = yellowHealth;
-				}
-				if ( game.getShip().getHitpoints() == 2)
-				{
-					// use  orange
-					temp = orangeHealth;
-				}
-				
-				if ( game.getShip().getHitpoints() == 1)
-				{
-					// use  red
-					temp = redHealth;
-				}
-				
-				
-				canvas.drawBitmap(temp, canvas.getWidth()- (buffer -10),0, new Paint());
-				buffer -= temp.getWidth();
+
+
+
+		for (int i =0; i < game.getShip().getHitpoints(); i++)
+		{			
+			if ( game.getShip().getHitpoints() > 4 )
+			{
+				// use green
+				temp = greenHealth;
 			}
-			
-	
+
+			if ( game.getShip().getHitpoints() == 3)
+			{
+				// use yellow  
+				temp = yellowHealth;
+			}
+			if ( game.getShip().getHitpoints() == 2)
+			{
+				// use  orange
+				temp = orangeHealth;
+			}
+
+			if ( game.getShip().getHitpoints() == 1)
+			{
+				// use  red
+				temp = redHealth;
+			}				
+
+			canvas.drawBitmap(temp, canvas.getWidth()- (buffer -10),0, new Paint());
+			buffer -= temp.getWidth();
+		}
+
+
 
 	}
 
@@ -499,12 +570,12 @@ public class Panel extends SurfaceView implements Callback  {
 
 		if (game.checkEndGame())
 		{
-			
+
 			/*Intent gameover = new Intent (context, GameOver.class);
 			context.startActivity(gameover);	*/
 			Log.d("Panel", "GAME OVER");
 		}
-		
+
 	}
 
 	@Override
