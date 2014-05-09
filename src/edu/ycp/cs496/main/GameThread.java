@@ -76,7 +76,7 @@ public class GameThread extends Thread {
 
 				while (sleepTime < 0 && framesSkipped < MAX_FRAME_SKIPS) {
 					// we need to catch up
-					this.mPanel.update(); // update without rendering
+					//this.mPanel.update(); // update without rendering
 					sleepTime += FRAME_PERIOD;	// add frame period to check if in next frame
 					framesSkipped++;
 				}
@@ -92,6 +92,6 @@ public class GameThread extends Thread {
 			}	
 		}
 	}
-
+    /// add a catch !!!!
 }
 

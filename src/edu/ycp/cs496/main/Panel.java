@@ -129,14 +129,8 @@ public class Panel extends SurfaceView implements Callback  {
 		space = BitmapFactory.decodeResource(getResources(), R.drawable.space);
 		space = Bitmap.createScaledBitmap(space, mWidth, mHeight, true);
 		cRotate = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotateclockwise);
-		cRotate = Bitmap.createScaledBitmap(cRotate, cRotate.getWidth() / 2, cRotate.getHeight() / 2, true);
-
 		ccRotate = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotatecounter);
-		ccRotate = Bitmap.createScaledBitmap(ccRotate, ccRotate.getWidth() / 2, ccRotate.getHeight() / 2, true);
-
-
-		fire = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_fire);
-		fire = Bitmap.createScaledBitmap(fire, fire.getWidth() / 2, fire.getHeight() / 2, true); 
+		fire = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_fire);	
 
 		shipBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.image_ship_symmetric);
 		shipBitMap = Bitmap.createScaledBitmap(shipBitMap, shipBitMap.getWidth() , shipBitMap.getHeight(), true); 
@@ -263,15 +257,13 @@ public class Panel extends SurfaceView implements Callback  {
 			button = ButtonType.CLOCKWISE; 
 
 			cRotate = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotateclockwise_press);
-			cRotate = Bitmap.createScaledBitmap(cRotate, cRotate.getWidth() / 2, cRotate.getHeight() / 2, true);
 		}
 
 		if(buttonHits(x, y) == ButtonType.COUNTERCLOCKWISE){
 			rotate = true; 
 			button = ButtonType.COUNTERCLOCKWISE;
 
-			ccRotate = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotatecounter_press);
-			ccRotate = Bitmap.createScaledBitmap(ccRotate, ccRotate.getWidth() / 2, ccRotate.getHeight() / 2, true);
+			ccRotate = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotatecounter_press);	
 		}
 
 		if(buttonHits(x, y) == ButtonType.FIRE){
@@ -280,7 +272,7 @@ public class Panel extends SurfaceView implements Callback  {
 			fire(); 
 
 			fire = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_fire_press);
-			fire = Bitmap.createScaledBitmap(fire, fire.getWidth() / 2, fire.getHeight() / 2, true);
+
 		}
 
 		if(buttonHits(x, y) == ButtonType.NONE){
@@ -294,13 +286,10 @@ public class Panel extends SurfaceView implements Callback  {
 			//Log.d(TAG, "UP!"); 
 
 			cRotate = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotateclockwise);
-			cRotate = Bitmap.createScaledBitmap(cRotate, cRotate.getWidth() / 2, cRotate.getHeight() / 2, true);
-
 			ccRotate = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotatecounter);
-			ccRotate = Bitmap.createScaledBitmap(ccRotate, ccRotate.getWidth() / 2, ccRotate.getHeight() / 2, true);
 
 			fire = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_fire);
-			fire = Bitmap.createScaledBitmap(fire, fire.getWidth() / 2, fire.getHeight() / 2, true);
+		
 
 
 		}
@@ -537,10 +526,14 @@ public class Panel extends SurfaceView implements Callback  {
 
 		if (game.checkEndGame())
 		{
+			
+			thread.setRunning(false);
+			thread.interrupt();
+			
 			Intent gameover = new Intent (context, GameOver.class);
 			context.startActivity(gameover);		
 
-			thread.setRunning(false);
+		
 			
 			Log.d("Panel", "GAME OVER");
 			
@@ -560,6 +553,7 @@ public class Panel extends SurfaceView implements Callback  {
 
 		thread.setRunning(true);
 		thread.start();
+		
 
 	}
 
