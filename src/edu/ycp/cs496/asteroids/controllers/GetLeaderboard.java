@@ -30,7 +30,7 @@ public class GetLeaderboard {
 		
 		// Construct URI
 		URI uri;
-		uri = URIUtils.createURI("http", "10.0.2.2", 8081, "/", 
+		uri = URIUtils.createURI("http", "23.21.105.22", 8081, "/leaderboard", 
 				    null, null);
 
 		// Construct request

@@ -14,6 +14,7 @@ import edu.ycp.cs496.asteroids.controllers.GetLeaderboard;
 import edu.ycp.cs496.asteroids.controllers.ScoreController;
 import edu.ycp.cs496.asteroids.model.User;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.app.Activity;
 import android.util.Log;
 import android.view.Menu;
@@ -32,6 +33,10 @@ public class LeaderboardActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+		StrictMode.setThreadPolicy(policy);
+		
 		setDefaultView(); 
 	}
 
