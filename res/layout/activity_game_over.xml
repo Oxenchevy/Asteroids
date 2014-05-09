@@ -10,21 +10,6 @@
     android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
     tools:context=".GameOver" >
 
-    <EditText
-        android:id="@+id/txtName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/Submitbtn"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="45dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:maxLength="3"
-        android:textColor="#000000" >
-
-        <requestFocus />
-    </EditText>
-
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
@@ -34,17 +19,6 @@
         android:text="Enter Name:"
         android:textColor="#FFFFFF"
         android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/finalScore"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/Submitbtn"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"
-        android:text="65565"
-        android:textColor="#FFFFFF"
-        android:textSize="20dp" />
 
     <TextView
         android:id="@+id/textView2"
@@ -70,5 +44,28 @@
         android:maxHeight="10dp"
         android:maxWidth="10dp"
         android:width="10dp" />
+
+    <EditText
+        android:id="@+id/txtName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:maxLength="3"
+        android:textColor="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/finalScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/Submitbtn"
+        android:layout_alignLeft="@+id/txtName"
+        android:layout_marginBottom="18dp"
+        android:layout_marginLeft="29dp"
+        android:text="65565"
+        android:textColor="#FFFFFF"
+        android:textSize="20dp" />
 
 </RelativeLayout>

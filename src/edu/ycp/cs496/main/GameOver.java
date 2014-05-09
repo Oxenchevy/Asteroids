@@ -37,7 +37,7 @@ public class GameOver extends Activity {
 		finalScore.setText(Integer.toString(game.getUser().getScore()));
 
 
-		final EditText name = (EditText)findViewById(R.id.txtName);
+		final TextView name = (TextView)findViewById(R.id.txtName);
 		Button submit = (Button) findViewById(R.id.Submitbtn);
 		submit.setOnClickListener(new View.OnClickListener(){
 			@Override
