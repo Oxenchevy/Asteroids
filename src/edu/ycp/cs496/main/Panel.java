@@ -516,14 +516,6 @@ public class Panel extends SurfaceView implements Callback  {
 		asteroidCont.fireCollision();
 		asteroidCont.asteroidCollision();
 		asteroidCont.shipToAsteroidCollision();
-
-		if(game.getShip().getHitpoints() < 1)
-		{
-			game.getShip().loseLife();
-			game.getShip().setHitpoints(6);
-
-		}
-
 		if (game.checkEndGame())
 		{
 			
@@ -539,6 +531,15 @@ public class Panel extends SurfaceView implements Callback  {
 			
 		}
 
+		if(game.getShip().getHitpoints() < 1)
+		{
+			game.getShip().loseLife();
+			game.getShip().setHitpoints(6);
+
+		}
+
+		
+
 	}
 
 	@Override
@@ -553,9 +554,7 @@ public class Panel extends SurfaceView implements Callback  {
 
 		thread.setRunning(true);
 		thread.start();
-		
-
-	}
+		}
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {

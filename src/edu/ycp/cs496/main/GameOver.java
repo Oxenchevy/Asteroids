@@ -24,8 +24,8 @@ public class GameOver extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		 this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_game_over);
-
 
 		// display game over
 		// display final score
