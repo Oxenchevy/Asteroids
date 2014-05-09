@@ -5,6 +5,8 @@ import edu.ycp.cs496.asteroids.model.Game;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,6 +14,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class GameOver extends Activity {
 
@@ -32,36 +35,18 @@ public class GameOver extends Activity {
 		game = AsteroidsSingleton.getGame();
 		TextView finalScore = (TextView)findViewById(R.id.finalScore); 
 		finalScore.setText(Integer.toString(game.getUser().getScore()));
-				
-		Button menu = (Button) findViewById(R.id.Menubtn);		
-		menu.setOnClickListener(new View.OnClickListener(){
 
+
+		final EditText name = (EditText)findViewById(R.id.txtName);
+		Button submit = (Button) findViewById(R.id.Submitbtn);
+		submit.setOnClickListener(new View.OnClickListener(){
 			@Override
-			public void onClick(View v) {
-				
-			
-				Intent intent = new Intent(getBaseContext(), MenuActivity.class);
-				startActivity(intent); 
+			public void onClick(View v) {				
+					// submit the information to the server and proceed to the leaderboard
+					Intent intent = new Intent(getBaseContext(), LeaderboardActivity.class);
+					startActivity(intent); 
 			}
-
 		});  
-
-
-		Button leaderboard = (Button) findViewById(R.id.Leaderboardbtn);
-		leaderboard.setOnClickListener(new View.OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-	
-				Intent intent = new Intent(getBaseContext(), LeaderboardActivity.class);
-				startActivity(intent); 
-			}
-
-		});  
-		
-	
-
-
 	}
 
 	@Override

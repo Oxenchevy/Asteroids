@@ -164,7 +164,7 @@ public class AsteroidController {
 			{				
 				((Asteroid) asteroids[i]).setDx();
 				((Asteroid) asteroids[i]).setDy();
-				System.out.println("COLLISION");
+				//System.out.println("COLLISION");
 
 				int size = ((Asteroid) asteroids[i]).getSize();		
 

@@ -23,40 +23,48 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="42dp"
+        android:layout_below="@+id/textView1"
+        android:layout_marginLeft="14dp"
+        android:layout_marginTop="16dp"
         android:text="Final Score: "
         android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/txtName"
+        android:layout_alignBottom="@+id/txtName"
+        android:layout_alignRight="@+id/textView2"
+        android:text="Enter Name:"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/txtName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:maxLength="3" />
+
+    <Button
+        android:id="@+id/Submitbtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtName"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="22dp"
+        android:text="Submit" />
 
     <TextView
         android:id="@+id/finalScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView2"
         android:layout_alignBottom="@+id/textView2"
         android:layout_alignLeft="@+id/textView1"
-        android:layout_alignRight="@+id/textView1"
-        android:layout_alignTop="@+id/textView2"
         android:textSize="20dp" />
-
-    <Button
-        android:id="@+id/Leaderboardbtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="15dp"
-        android:layout_marginRight="32dp"
-        android:text="LeaderBoard" />
-
-    <Button
-        android:id="@+id/Menubtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/Leaderboardbtn"
-        android:layout_alignBottom="@+id/Leaderboardbtn"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="33dp"
-        android:text="Main Menu" />
 
 </RelativeLayout>
