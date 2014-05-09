@@ -289,7 +289,7 @@ public class Panel extends SurfaceView implements Callback  {
 			ccRotate = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_rotatecounter);
 
 			fire = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_fire);
-		
+
 
 
 		}
@@ -515,31 +515,21 @@ public class Panel extends SurfaceView implements Callback  {
 
 		asteroidCont.fireCollision();
 		asteroidCont.asteroidCollision();
-		asteroidCont.shipToAsteroidCollision();
-		if (game.checkEndGame())
-		{
-			
-			thread.setRunning(false);
-			thread.interrupt();
-			
-			Intent gameover = new Intent (context, GameOver.class);
-			context.startActivity(gameover);		
-
-		
-			
-			Log.d("Panel", "GAME OVER");
-			
-		}
+		asteroidCont.shipToAsteroidCollision();	
 
 		if(game.getShip().getHitpoints() < 1)
 		{
+			if (game.checkEndGame())
+			{			
+				thread.setRunning(false);
+				thread.interrupt();				
+				Intent gameover = new Intent (context, GameOver.class);
+				context.startActivity(gameover);						
+			}
 			game.getShip().loseLife();
 			game.getShip().setHitpoints(6);
 
 		}
-
-		
-
 	}
 
 	@Override
@@ -554,7 +544,7 @@ public class Panel extends SurfaceView implements Callback  {
 
 		thread.setRunning(true);
 		thread.start();
-		}
+	}
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
