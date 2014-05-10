@@ -3,6 +3,185 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content" >
 
+    <TextView
+        android:id="@+id/TextView01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_below="@+id/textView1"
+        android:layout_weight="0.05"
+        android:text="2"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/TextView02"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/TextView01"
+        android:layout_below="@+id/TextView01"
+        android:layout_weight="0.05"
+        android:text="3"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/TextView03"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/TextView02"
+        android:layout_below="@+id/TextView02"
+        android:layout_weight="0.05"
+        android:text="4"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/TextView04"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/TextView03"
+        android:layout_below="@+id/TextView03"
+        android:layout_weight="0.05"
+        android:text="5"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/TextView05"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/TextView04"
+        android:layout_below="@+id/TextView04"
+        android:layout_weight="0.05"
+        android:text="6"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/TextView06"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/TextView05"
+        android:layout_below="@+id/TextView05"
+        android:layout_weight="0.05"
+        android:text="7"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/TextView07"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/TextView06"
+        android:layout_below="@+id/TextView06"
+        android:layout_weight="0.05"
+        android:text="8"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/TextView08"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/TextView07"
+        android:layout_below="@+id/TextView07"
+        android:layout_weight="0.05"
+        android:text="9"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/TextView09"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/TextView08"
+        android:layout_below="@+id/TextView08"
+        android:layout_weight="0.05"
+        android:text="10"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/index1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/index0"
+        android:layout_below="@+id/index0"
+        android:text="  "
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/index2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/TextView03"
+        android:layout_alignLeft="@+id/index1"
+        android:text="  "
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/index4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/index3"
+        android:layout_below="@+id/TextView03"
+        android:text=" "
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/index5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/TextView06"
+        android:layout_alignLeft="@+id/index4"
+        android:text=" "
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/index6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/TextView07"
+        android:layout_alignLeft="@+id/index5"
+        android:text=" "
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/index7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/TextView08"
+        android:layout_alignLeft="@+id/index6"
+        android:text=" "
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/index8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/TextView09"
+        android:layout_alignLeft="@+id/index7"
+        android:text=" "
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/index9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/index8"
+        android:layout_below="@+id/index8"
+        android:text=" "
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/index3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/index2"
+        android:layout_below="@+id/index2"
+        android:text="  "
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/index0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/TextView01"
+        android:layout_toRightOf="@+id/TextView09"
+        android:textSize="30sp" />
+
     <Button
         android:id="@+id/mainMenu"
         android:layout_width="wrap_content"
@@ -16,172 +195,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/mainMenu"
-        android:layout_marginLeft="38dp"
-        android:layout_toRightOf="@+id/mainMenu"
+        android:layout_centerHorizontal="true"
         android:layout_weight="0.05"
-        android:text="1" />
-
-    <TextView
-        android:id="@+id/TextView01"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/textView1"
-        android:layout_weight="0.05"
-        android:text="2" />
-
-    <TextView
-        android:id="@+id/TextView02"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/TextView01"
-        android:layout_below="@+id/TextView01"
-        android:layout_weight="0.05"
-        android:text="3" />
-
-    <TextView
-        android:id="@+id/TextView03"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/TextView02"
-        android:layout_below="@+id/TextView02"
-        android:layout_weight="0.05"
-        android:text="4" />
-
-    <TextView
-        android:id="@+id/TextView04"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/TextView03"
-        android:layout_below="@+id/TextView03"
-        android:layout_weight="0.05"
-        android:text="5" />
-
-    <TextView
-        android:id="@+id/TextView05"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/TextView04"
-        android:layout_below="@+id/TextView04"
-        android:layout_weight="0.05"
-        android:text="6" />
-
-    <TextView
-        android:id="@+id/TextView06"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/TextView05"
-        android:layout_below="@+id/TextView05"
-        android:layout_weight="0.05"
-        android:text="7" />
-
-    <TextView
-        android:id="@+id/TextView07"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/TextView06"
-        android:layout_below="@+id/TextView06"
-        android:layout_weight="0.05"
-        android:text="8" />
-
-    <TextView
-        android:id="@+id/TextView08"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/TextView07"
-        android:layout_below="@+id/TextView07"
-        android:layout_weight="0.05"
-        android:text="9" />
-
-    <TextView
-        android:id="@+id/TextView09"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/TextView08"
-        android:layout_below="@+id/TextView08"
-        android:layout_weight="0.05"
-        android:text="10" />
-
-    <TextView
-        android:id="@+id/index0"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textView1"
-        android:layout_below="@+id/mainMenu"
-        android:layout_marginLeft="19dp"
-        android:layout_toRightOf="@+id/TextView09"
-        android:text="  " />
-
-    <TextView
-        android:id="@+id/index1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/index0"
-        android:layout_below="@+id/index0"
-        android:text="  " />
-
-    <TextView
-        android:id="@+id/index2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/TextView03"
-        android:layout_alignLeft="@+id/index1"
-        android:text="  " />
-
-    <TextView
-        android:id="@+id/index4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/index3"
-        android:layout_below="@+id/TextView03"
-        android:text=" " />
-
-    <TextView
-        android:id="@+id/index5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/TextView06"
-        android:layout_alignLeft="@+id/index4"
-        android:text=" " />
-
-    <TextView
-        android:id="@+id/index6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/TextView07"
-        android:layout_alignLeft="@+id/index5"
-        android:text=" " />
-
-    <TextView
-        android:id="@+id/index7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/TextView08"
-        android:layout_alignLeft="@+id/index6"
-        android:text=" " />
-
-    <TextView
-        android:id="@+id/index8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/TextView09"
-        android:layout_alignLeft="@+id/index7"
-        android:text=" " />
-
-    <TextView
-        android:id="@+id/index9"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/index8"
-        android:layout_below="@+id/index8"
-        android:text=" " />
-
-    <TextView
-        android:id="@+id/index3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/index2"
-        android:layout_below="@+id/index2"
-        android:text="  " />
+        android:text="1"
+        android:textSize="30sp" />
 
 </RelativeLayout>
