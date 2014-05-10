@@ -3,12 +3,12 @@ package edu.ycp.cs496.main;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.http.client.ClientProtocolException;
 import org.xml.sax.SAXException;
-
 
 import edu.ycp.cs496.asteroids.controllers.GetLeaderboard;
 import edu.ycp.cs496.asteroids.controllers.ScoreController;
@@ -21,29 +21,61 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.Window;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
 
 public class LeaderboardActivity extends Activity {
 	Context context;
+	Button mainMenu;
+	private ArrayList<TextView> static_txt_list;
+	private List<TextView> dynamic_list;
+
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)  {
 		super.onCreate(savedInstanceState);
-		
+		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		setContentView(R.layout.activity_leaderboard);
+
+		mainMenu = (Button)findViewById(R.id.mainMenu);
+		mainMenu.setOnClickListener(new View.OnClickListener(){
+			@Override
+			public void onClick(View v) {				
+				// submit the information to the server and proceed to the leaderboard
+				Intent intent = new Intent(getBaseContext(), MenuActivity.class);
+				startActivity(intent); 
+			}
+		});  
+
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 		StrictMode.setThreadPolicy(policy);
-		
-		
+
+		static_txt_list = new ArrayList<TextView>();
+		static_txt_list.add((TextView) findViewById(R.id.index0));
+		static_txt_list.add((TextView) findViewById(R.id.index1));
+		static_txt_list.add((TextView) findViewById(R.id.index2));
+		static_txt_list.add((TextView) findViewById(R.id.index3));
+		static_txt_list.add((TextView) findViewById(R.id.index4));
+		static_txt_list.add((TextView) findViewById(R.id.index5));
+		static_txt_list.add((TextView) findViewById(R.id.index6));
+		static_txt_list.add((TextView) findViewById(R.id.index7));
+		static_txt_list.add((TextView) findViewById(R.id.index8));
+		static_txt_list.add((TextView) findViewById(R.id.index9));
+
+		dynamic_list = new ArrayList<TextView>();
+		leaderboard();
 		context = this;
-		setDefaultView(); 
+
 	}
 
 	@Override
@@ -66,70 +98,13 @@ public class LeaderboardActivity extends Activity {
 		}
 	}
 
-	/*public void getItem() throws URISyntaxException, ClientProtocolException,
-	IOException, ParserConfigurationException, SAXException{
-		GetItem ic = new GetItem();
 
-		String itemString = itemTextView.getText().toString(); 
 
-		if(itemString != null){
-			Item item = ic.getItems(itemString);
+	public void leaderboard() {
 
-			if(item != null){
-				displayItemView(item); 
-			}
-			else{
-				Toast.makeText(MobileInventoryClient.this, "ITEM NOT FOUND!", Toast.LENGTH_SHORT).show();
-			}
-
-		}
-		else{
-			getInventory(); 
-		}
-	}*/
-
-	/*public void deleteItem() throws URISyntaxException, ClientProtocolException,
-	IOException, ParserConfigurationException, SAXException{
-		DeleteItem dc = new DeleteItem();
-
-		String itemString = itemTextView.getText().toString(); 
-
-		//if(itemString != null){
-		if(dc.deleteItem(itemString) == true){
-			Toast.makeText(MobileInventoryClient.this, itemString + " deleted!", Toast.LENGTH_SHORT).show();; 
-		}
-		else{
-			Toast.makeText(MobileInventoryClient.this, "ITEM NOT FOUND!", Toast.LENGTH_SHORT).show();
-		}
-		//}
-
-	}*/
-
-	/*	public void postItem() throws URISyntaxException, ClientProtocolException,
-	IOException, ParserConfigurationException, SAXException{
-		ScoreController sc = new ScoreController();
-
-		String itemString = itemTextView.getText().toString(); 
-		Integer itemQuant = Integer.parseInt(quantityTextView.getText().toString());
-
-		if(itemString != null && itemQuant != null){
-			if(pc.postItem(itemString, itemQuant) == true){
-				Toast.makeText(MobileInventoryClient.this, itemString + " updated!", Toast.LENGTH_SHORT).show();; 
-			}
-			else{
-				Toast.makeText(MobileInventoryClient.this, "Post failed!", Toast.LENGTH_SHORT).show();
-			}
-		}
-
-	}*/
-
-	public void setDefaultView() {
-		setContentView(R.layout.activity_leaderboard);
-		
-		Log.d(" ", "SDV"); 
 		try {
 			getLeaderboard();
-			
+
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -140,57 +115,25 @@ public class LeaderboardActivity extends Activity {
 
 	// Method for displaying inventory list
 	public void displayLeaderboardView(User[] leaderboard) {
-		// Create Linear layout
-		LinearLayout layout = new LinearLayout(this);
-		layout.setOrientation(LinearLayout.VERTICAL);
-		LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(
-				LinearLayout.LayoutParams.FILL_PARENT,
-				LinearLayout.LayoutParams.FILL_PARENT);
 
-		// Add back button
-		Button backButton = new Button(this);
-		backButton.setText("Main Menu");
-		backButton.setLayoutParams(new LayoutParams(
-				LayoutParams.WRAP_CONTENT,
-				LayoutParams.WRAP_CONTENT));
-		// TODO: Add back button onClickListener
-
-		backButton.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				// go back to main menu
-				
-				Intent menuIntent = new Intent(context, MenuActivity.class);
-				
-			
-				startActivity(menuIntent);
-				
-				try {
-					setDefaultView(); 
-				}
-				catch (Exception e) {
-					e.printStackTrace();
-				}
-
-			}
-		});
-		// Add button to layout
-		layout.addView(backButton);
 
 		final ArrayList<String> listArray = new ArrayList<String>(); 
+		// gets the right number of text boxers to display information
+		for(int i = 0; i < leaderboard.length; i++)
+		{
+			dynamic_list.add(static_txt_list.get(i));
+		}
 
 		for(User u : leaderboard){
 			listArray.add(u.getName().toString() + "-" + Integer.toString(u.getScore())); 
+		}		
+
+		// only get the top 10
+		for(int i = 0; i < 9; i++)
+		{
+			dynamic_list.get(i).setText(listArray.get(i));
+
 		}
-		// TODO: Add ListView with inventory
-		ListAdapter la = new ArrayAdapter<String>(this, R.layout.activity_leaderboard, listArray);
-		ListView lv = new ListView(this);
-		lv.setAdapter(la);      
-		layout.addView(lv);
-		// Make inventory view visible
-		setContentView(layout,llp);    	
 	}
 
 }
