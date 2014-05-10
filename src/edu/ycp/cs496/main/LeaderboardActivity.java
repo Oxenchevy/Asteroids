@@ -16,6 +16,8 @@ import edu.ycp.cs496.asteroids.model.User;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -28,8 +30,10 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class LeaderboardActivity extends Activity {
 
+
+public class LeaderboardActivity extends Activity {
+	Context context;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -37,6 +41,8 @@ public class LeaderboardActivity extends Activity {
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 		StrictMode.setThreadPolicy(policy);
 		
+		
+		context = this;
 		setDefaultView(); 
 	}
 
@@ -143,7 +149,7 @@ public class LeaderboardActivity extends Activity {
 
 		// Add back button
 		Button backButton = new Button(this);
-		backButton.setText("Back");
+		backButton.setText("Main Menu");
 		backButton.setLayoutParams(new LayoutParams(
 				LayoutParams.WRAP_CONTENT,
 				LayoutParams.WRAP_CONTENT));
@@ -154,6 +160,13 @@ public class LeaderboardActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				// go back to main menu
+				
+				Intent menuIntent = new Intent(context, MenuActivity.class);
+				
+			
+				startActivity(menuIntent);
+				
 				try {
 					setDefaultView(); 
 				}

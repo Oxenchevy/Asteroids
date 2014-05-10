@@ -49,6 +49,16 @@ public class MenuActivity extends Activity {
 				startActivity(intent); 
 			}	
 		});  	
+		
+		/*ImageView setting = (ImageView) findViewById(R.id.imageView4); 
+		setting.setOnClickListener(new View.OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getBaseContext(), SettingsActivity.class);
+				startActivity(intent); 
+			}	
+		});  */
 	}
 
 }

@@ -138,12 +138,8 @@ public class Panel extends SurfaceView implements Callback  {
 		ballBitMap = Bitmap.createScaledBitmap(ballBitMap, ballBitMap.getWidth() , ballBitMap.getHeight(), true); 
 
 		asteroidSmall = BitmapFactory.decodeResource(getResources(), R.drawable.image_asteroid_small);
-		asteroidSmall = Bitmap.createScaledBitmap(asteroidSmall, asteroidSmall.getWidth() / 2, asteroidSmall.getHeight() / 2, true); 
-		asteroidMedium = BitmapFactory.decodeResource(getResources(), R.drawable.image_asteroid_medium);
-		asteroidMedium = Bitmap.createScaledBitmap(asteroidMedium, asteroidMedium.getWidth() / 2, asteroidMedium.getHeight() / 2, true); 
+		asteroidMedium = BitmapFactory.decodeResource(getResources(), R.drawable.image_asteroid_medium);		
 		asteroidLarge = BitmapFactory.decodeResource(getResources(), R.drawable.image_asteroid_large);
-		asteroidLarge = Bitmap.createScaledBitmap(asteroidLarge, asteroidLarge.getWidth() / 2, asteroidLarge.getHeight() / 2, true); 
-
 
 		greenHealth = BitmapFactory.decodeResource(getResources(), R.drawable.green_health);
 		greenHealth = Bitmap.createScaledBitmap(greenHealth, greenHealth.getWidth() /4, greenHealth.getHeight() / 4, true);
