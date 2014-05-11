@@ -27,6 +27,7 @@ public class GameOver extends Activity {
 		 this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_game_over);
 
+		
 		// display game over
 		// display final score
 		// go to leader board or main menu

@@ -38,8 +38,11 @@ import android.widget.Toast;
 public class LeaderboardActivity extends Activity {
 	Context context;
 	Button mainMenu;
-	private ArrayList<TextView> static_txt_list;
-	private List<TextView> dynamic_list;
+	private ArrayList<TextView> static_name_list;
+	private List<TextView> dynamic_name_list;
+
+	private ArrayList<TextView> static_score_list;
+	private List<TextView> dynamic_score_list;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)  {
@@ -60,19 +63,33 @@ public class LeaderboardActivity extends Activity {
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 		StrictMode.setThreadPolicy(policy);
 
-		static_txt_list = new ArrayList<TextView>();
-		static_txt_list.add((TextView) findViewById(R.id.index0));
-		static_txt_list.add((TextView) findViewById(R.id.index1));
-		static_txt_list.add((TextView) findViewById(R.id.index2));
-		static_txt_list.add((TextView) findViewById(R.id.index3));
-		static_txt_list.add((TextView) findViewById(R.id.index4));
-		static_txt_list.add((TextView) findViewById(R.id.index5));
-		static_txt_list.add((TextView) findViewById(R.id.index6));
-		static_txt_list.add((TextView) findViewById(R.id.index7));
-		static_txt_list.add((TextView) findViewById(R.id.index8));
-		static_txt_list.add((TextView) findViewById(R.id.index9));
+		static_name_list = new ArrayList<TextView>();
+		static_name_list.add((TextView) findViewById(R.id.index0));
+		static_name_list.add((TextView) findViewById(R.id.index1));
+		static_name_list.add((TextView) findViewById(R.id.index2));
+		static_name_list.add((TextView) findViewById(R.id.index3));
+		static_name_list.add((TextView) findViewById(R.id.index4));
+		static_name_list.add((TextView) findViewById(R.id.index5));
+		static_name_list.add((TextView) findViewById(R.id.index6));
+		static_name_list.add((TextView) findViewById(R.id.index7));
+		static_name_list.add((TextView) findViewById(R.id.index8));
+		static_name_list.add((TextView) findViewById(R.id.index9));
+		dynamic_name_list = new ArrayList<TextView>();
 
-		dynamic_list = new ArrayList<TextView>();
+
+		static_score_list = new ArrayList<TextView>();
+		static_score_list.add((TextView) findViewById(R.id.txtScore0));
+		static_score_list.add((TextView) findViewById(R.id.txtScore1));
+		static_score_list.add((TextView) findViewById(R.id.txtScore2));
+		static_score_list.add((TextView) findViewById(R.id.txtScore3));
+		static_score_list.add((TextView) findViewById(R.id.txtScore4));
+		static_score_list.add((TextView) findViewById(R.id.txtScore5));
+		static_score_list.add((TextView) findViewById(R.id.txtScore6));
+		static_score_list.add((TextView) findViewById(R.id.txtScore7));
+		static_score_list.add((TextView) findViewById(R.id.txtScore8));
+		static_score_list.add((TextView) findViewById(R.id.txtScore9));
+		dynamic_score_list = new ArrayList<TextView>();		
+
 		leaderboard();
 		context = this;
 
@@ -117,21 +134,35 @@ public class LeaderboardActivity extends Activity {
 	public void displayLeaderboardView(User[] leaderboard) {
 
 
-		final ArrayList<String> listArray = new ArrayList<String>(); 
+		final ArrayList<String> nameArray = new ArrayList<String>(); 
+		final ArrayList<String> scoreArray = new ArrayList<String>(); 
 		// gets the right number of text boxers to display information
 		for(int i = 0; i < leaderboard.length; i++)
 		{
-			dynamic_list.add(static_txt_list.get(i));
+			dynamic_name_list.add(static_name_list.get(i));
+			dynamic_score_list.add(static_score_list.get(i));
 		}
 
 		for(User u : leaderboard){
-			listArray.add(u.getName().toString() + "-" + Integer.toString(u.getScore())); 
+			nameArray.add(u.getName().toString()); // + "-" + Integer.toString(u.getScore())); 
+			scoreArray.add(Integer.toString(u.getScore()));
 		}		
 
+		int count = 0;
+
 		// only get the top 10
-		for(int i = 0; i < 9; i++)
+		for(int i = 0; i < leaderboard.length; i++)
 		{
-			dynamic_list.get(i).setText(listArray.get(i));
+			if (count != 10)
+			{
+				dynamic_name_list.get(i).setText(nameArray.get(i));
+				dynamic_score_list.get(i).setText(scoreArray.get(i));
+				count++;
+			}
+			else
+			{
+				break;
+			}
 
 		}
 	}
