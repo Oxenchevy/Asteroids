@@ -71,6 +71,7 @@ public class Panel extends SurfaceView implements Callback  {
 	private Bitmap redHealth;
 	private Bitmap shipLives;
 
+
 	Bitmap temp;
 
 	//Controllers
@@ -355,7 +356,7 @@ public class Panel extends SurfaceView implements Callback  {
 
 
 	public void fire(){
-		if(System.currentTimeMillis() - fireTime > 200){
+		if(System.currentTimeMillis() - fireTime > 100){
 			projCont.fire(mHeight, mWidth); 
 		}
 
@@ -431,15 +432,7 @@ public class Panel extends SurfaceView implements Callback  {
 			canvas.drawBitmap(shipLives, canvas.getWidth()- (buffer -10),0, new Paint());
 			buffer -= shipLives.getWidth();
 		}
-
-
-
 	}
-
-
-
-
-
 	public void render(Canvas canvas) {
 
 		if(!countdown){
@@ -509,9 +502,39 @@ public class Panel extends SurfaceView implements Callback  {
 		asteroidCont.update();
 		asteroids = asteroidCont.getAsteroidList(); 
 
+		//Asteroid asteroid = 
 		asteroidCont.fireCollision();
+/*		int size = asteroid.getSize();
+		switch(size)
+		{
+		case 1:
+			// small asteroid hit
+			// do nothing
+		case 2:
+			// medium hit
+		//	asteroidMedium = BitmapFactory.decodeResource(getResources(), R.drawable.image_asteroid_medium_damaged);	
+			//asteroidMedium = Bitmap.createScaledBitmap(asteroidMedium, asteroidMedium.getWidth() , asteroidMedium.getHeight(), true); 
+			System.out.println("HIT MEDIUM");
+		case 3:
+			// large hit
+			asteroidLarge = BitmapFactory.decodeResource(getResources(), R.drawable.image_asteroid_large_damaged);
+		}
+*/
 		asteroidCont.asteroidCollision();
-		asteroidCont.shipToAsteroidCollision();	
+
+
+		if(asteroidCont.shipToAsteroidCollision())
+		{
+			shipBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.image_ship_symmetric_damaged);
+			shipBitMap = Bitmap.createScaledBitmap(shipBitMap, shipBitMap.getWidth() , shipBitMap.getHeight(), true); 
+
+		}
+		else
+		{
+			// Original image
+			shipBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.image_ship_symmetric);
+			shipBitMap = Bitmap.createScaledBitmap(shipBitMap, shipBitMap.getWidth() , shipBitMap.getHeight(), true); 
+		}
 
 		if(game.getShip().getHitpoints() < 1)
 		{

@@ -93,6 +93,7 @@ public class AsteroidController {
 
 	public void fireCollision()
 	{
+		Asteroid asteroid = null;
 		Object[] asteroids  = getAsteroidList();
 		for(int i = 0; i < getAsteroidList().length; i++){
 			for(int p = 0; p < game.getShip().getProjectiles().length; p++){
@@ -111,9 +112,12 @@ public class AsteroidController {
 					//removeAsteroid(i);
 					((Asteroid) asteroids[i]).loseHitpoint(); 
 					game.getShip().removeProjectile(p);
+					asteroid = ((Asteroid) asteroids[i]);
+					
 				}				
 			}
 		}
+		//return asteroid;
 	}
 
 	public void asteroidCollision()
@@ -147,8 +151,9 @@ public class AsteroidController {
 		}
 	}
 
-	public void shipToAsteroidCollision()
+	public boolean shipToAsteroidCollision()
 	{
+		boolean collsionOccured = false;
 		Object[] asteroids  = getAsteroidList();
 
 		for(int i=0; i<getAsteroidList().length; i++)
@@ -181,11 +186,13 @@ public class AsteroidController {
 					break;
 				case 1: // If a SMALL asteroid, lose 1 hitpoints
 					game.getShip().loseHitpoint();
-
+					
 				}
-
-
+				collsionOccured = true;
 			}
+					
 		}
+		return collsionOccured;
+	
 	}
 }
