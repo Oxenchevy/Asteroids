@@ -32,7 +32,7 @@ public class AsteroidController {
 			game.nextLevel(); 
 
 			// Repopulate list of asteroids based on current level.
-			for(int i = 0; i < 4*game.getLevel(); i++) {
+			for(int i = 0; i < 2*game.getLevel(); i++) {
 				// Spawn an asteroid with random attributes at a random location on the edge of the map.
 				asteroids.add(new Asteroid());
 			}
