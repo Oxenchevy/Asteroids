@@ -12,6 +12,7 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import edu.ycp.cs496.asteroids.controllers.AsteroidsSingleton;
+import edu.ycp.cs496.asteroids.controllers.DeleteLeaderboard;
 import edu.ycp.cs496.asteroids.controllers.PostScore;
 import edu.ycp.cs496.asteroids.model.Game;
 import android.os.Bundle;
@@ -51,24 +52,45 @@ public class GameOver extends Activity {
 		TextView finalScore = (TextView)findViewById(R.id.finalScore); 
 		finalScore.setText(Integer.toString(game.getUser().getScore()));
 
-		 final TextView UserName = (TextView)findViewById(R.id.txtName);
-		 
-		 
-		 UserName.addTextChangedListener(new TextWatcher(){
-		        public void afterTextChanged(Editable s) {
-		        	name = UserName.getText().toString();
-		        }
-		        public void beforeTextChanged(CharSequence s, int start, int count, int after){}
-		        public void onTextChanged(CharSequence s, int start, int before, int count){}
-		    });
-		 
+		final TextView UserName = (TextView)findViewById(R.id.txtName);
+
+
+		UserName.addTextChangedListener(new TextWatcher(){
+			public void afterTextChanged(Editable s) {
+				name = UserName.getText().toString();
+			}
+			public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+			public void onTextChanged(CharSequence s, int start, int before, int count){}
+		});
+
 
 		Button submit = (Button) findViewById(R.id.Submitbtn);
 		submit.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-			
-			
+				try {
+					for (int i = 0; i < 9; i++)
+					{
+						deleteInventory();
+					}
+				} catch (ClientProtocolException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (URISyntaxException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (ParserConfigurationException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (SAXException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+
 
 				score = game.getUser().getScore();
 				if (name != null)
@@ -125,5 +147,12 @@ public class GameOver extends Activity {
 			//Toast.makeText(GameOver.this, "Could not add " + name, Toast.LENGTH_SHORT).show(); 
 		} 
 	} // end the postItem 
+
+	public static void deleteInventory() throws URISyntaxException, ClientProtocolException, 
+	IOException, ParserConfigurationException, SAXException{ 
+		DeleteLeaderboard ic = new DeleteLeaderboard(); 
+		boolean item = ic.deleteScores(); 
+
+	} // end the deleteItem 
 
 }
