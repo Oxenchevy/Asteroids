@@ -53,7 +53,7 @@
         android:layout_centerVertical="true"
         android:ems="10"
         android:inputType="textPersonName"
-        android:maxLength="3"
+        android:maxLength="4"
         android:textColor="#FFFFFF" />
 
     <TextView

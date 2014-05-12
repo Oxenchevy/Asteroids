@@ -18,13 +18,20 @@ import edu.ycp.cs496.asteroids.controllers.ScoreController;
 import edu.ycp.cs496.asteroids.model.User;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.util.Log;
+import android.view.Display;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -41,17 +48,22 @@ import android.widget.Toast;
 public class LeaderboardActivity extends Activity {
 	Context context;
 	Button mainMenu;
+	public static int mWidth;
+	public static int mHeight;
+
 	private ArrayList<TextView> static_name_list;
 	private List<TextView> dynamic_name_list;
 
 	private ArrayList<TextView> static_score_list;
 	private List<TextView> dynamic_score_list;
 
+	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState)  {
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.activity_leaderboard);
+		setContentView(R.layout.activity_leaderboard);		
+
 
 		mainMenu = (Button)findViewById(R.id.mainMenu);
 		mainMenu.setOnClickListener(new View.OnClickListener(){
@@ -184,6 +196,15 @@ public class LeaderboardActivity extends Activity {
 			}
 
 		}
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	     if (keyCode == KeyEvent.KEYCODE_BACK) {
+	     //preventing default implementation previous to android.os.Build.VERSION_CODES.ECLAIR
+	     return true;
+	     }
+	     return super.onKeyDown(keyCode, event);    
 	}
 
 }

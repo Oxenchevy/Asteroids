@@ -542,9 +542,13 @@ public class Panel extends SurfaceView implements Callback  {
 			if (game.checkEndGame())
 			{			
 				thread.setRunning(false);
-				thread.interrupt();				
+				thread.interrupt();		
+				
+				((Activity) context).finish();
 				Intent gameover = new Intent (context, GameOver.class);
-				context.startActivity(gameover);						
+				
+				context.startActivity(gameover);		
+				
 			}
 		
 			game.getShip().setHitpoints(6);

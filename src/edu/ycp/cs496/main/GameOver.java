@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -156,5 +157,14 @@ public class GameOver extends Activity {
 		boolean item = ic.deleteScores(); 
 
 	} // end the deleteItem 
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	     if (keyCode == KeyEvent.KEYCODE_BACK) {
+	     //preventing default implementation previous to android.os.Build.VERSION_CODES.ECLAIR
+	     return true;
+	     }
+	     return super.onKeyDown(keyCode, event);    
+	}
 
 }
