@@ -68,7 +68,7 @@ public class GameOver extends Activity {
 		submit.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				try {
+				/*try {
 					for (int i = 0; i < 9; i++)
 					{
 						deleteInventory();
@@ -90,7 +90,7 @@ public class GameOver extends Activity {
 					e1.printStackTrace();
 				}
 
-
+*/
 
 				score = game.getUser().getScore();
 				if (name != null)
@@ -115,7 +115,6 @@ public class GameOver extends Activity {
 						e.printStackTrace();
 					} 
 
-					//Toast.makeText(GameOver.this, "Added " + score + " " + name, Toast.LENGTH_SHORT).show(); 
 					Intent intent = new Intent(getBaseContext(), LeaderboardActivity.class);
 					startActivity(intent); 
 
@@ -124,7 +123,6 @@ public class GameOver extends Activity {
 				{
 					Toast.makeText(GameOver.this, "Fill in Name", Toast.LENGTH_SHORT).show(); 
 				}
-
 			}	
 
 		}) ;  

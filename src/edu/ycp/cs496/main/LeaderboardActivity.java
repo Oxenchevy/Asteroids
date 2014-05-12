@@ -3,6 +3,9 @@ package edu.ycp.cs496.main;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -132,7 +135,7 @@ public class LeaderboardActivity extends Activity {
 
 	// Method for displaying inventory list
 	public void displayLeaderboardView(User[] leaderboard) {
-
+	
 
 		final ArrayList<String> nameArray = new ArrayList<String>(); 
 		final ArrayList<String> scoreArray = new ArrayList<String>(); 
@@ -142,11 +145,27 @@ public class LeaderboardActivity extends Activity {
 			dynamic_name_list.add(static_name_list.get(i));
 			dynamic_score_list.add(static_score_list.get(i));
 		}
+		
 
+		
+
+		Collections.sort(Arrays.asList(leaderboard), new Comparator<User>() {  
+
+			@Override
+			public int compare(User lhs, User rhs) {
+				// TODO Auto-generated method stub
+		       // return lhs.getScore() - rhs.getScore();
+				 return rhs.getScore() - lhs.getScore();
+			}
+		});
+		
 		for(User u : leaderboard){
 			nameArray.add(u.getName().toString()); // + "-" + Integer.toString(u.getScore())); 
 			scoreArray.add(Integer.toString(u.getScore()));
-		}		
+		}	
+
+		
+
 
 		int count = 0;
 

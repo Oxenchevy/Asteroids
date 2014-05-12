@@ -64,8 +64,7 @@ public class Asteroid {
 		this.location = loc;
 		this.size = size;
 		hitpoints = size;
-		radius = size;
-		
+			
 		this.smallWidth = AsteroidsSingleton.getSmallAsteroidWidth(); 
 		this.medWidth = AsteroidsSingleton.getMedAsteroidWidth();  
 		this.largeWidth = AsteroidsSingleton.getLargeAsteroidWidth(); 
