@@ -154,7 +154,7 @@ public class LeaderboardActivity extends Activity {
 			@Override
 			public int compare(User lhs, User rhs) {
 				// TODO Auto-generated method stub
-		       // return lhs.getScore() - rhs.getScore();
+		  
 				 return rhs.getScore() - lhs.getScore();
 			}
 		});

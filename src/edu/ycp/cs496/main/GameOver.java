@@ -58,6 +58,8 @@ public class GameOver extends Activity {
 		UserName.addTextChangedListener(new TextWatcher(){
 			public void afterTextChanged(Editable s) {
 				name = UserName.getText().toString();
+		
+		
 			}
 			public void beforeTextChanged(CharSequence s, int start, int count, int after){}
 			public void onTextChanged(CharSequence s, int start, int before, int count){}
@@ -68,6 +70,8 @@ public class GameOver extends Activity {
 		submit.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				
+			
 				/*try {
 					for (int i = 0; i < 9; i++)
 					{
@@ -97,7 +101,7 @@ public class GameOver extends Activity {
 				{
 
 					try {
-						postItem(name, score);
+						postItem(name.toUpperCase(), score);
 					} catch (ClientProtocolException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
