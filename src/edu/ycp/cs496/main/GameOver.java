@@ -15,6 +15,7 @@ import edu.ycp.cs496.asteroids.controllers.AsteroidsSingleton;
 import edu.ycp.cs496.asteroids.controllers.PostScore;
 import edu.ycp.cs496.asteroids.model.Game;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.app.Activity;
 import android.content.Intent;
 import android.text.Editable;
@@ -41,41 +42,69 @@ public class GameOver extends Activity {
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_game_over);
 
+		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+		StrictMode.setThreadPolicy(policy);
+
 		AsteroidsSingleton.getInstance();
 
 		game = AsteroidsSingleton.getGame();
 		TextView finalScore = (TextView)findViewById(R.id.finalScore); 
 		finalScore.setText(Integer.toString(game.getUser().getScore()));
 
-		final TextView UserName = (TextView)findViewById(R.id.txtName);
+		 final TextView UserName = (TextView)findViewById(R.id.txtName);
+		 
+		 
+		 UserName.addTextChangedListener(new TextWatcher(){
+		        public void afterTextChanged(Editable s) {
+		        	name = UserName.getText().toString();
+		        }
+		        public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+		        public void onTextChanged(CharSequence s, int start, int before, int count){}
+		    });
+		 
 
 		Button submit = (Button) findViewById(R.id.Submitbtn);
 		submit.setOnClickListener(new View.OnClickListener() {
 			@Override
-			public void onClick(View v) {				
+			public void onClick(View v) {
+			
+			
 
+				score = game.getUser().getScore();
+				if (name != null)
+				{
 
-				try { 
-					name = UserName.getText().toString();
-					score = game.getUser().getScore();
-					if (name.length() > 0) 
-					{ 
-						// just add the name that was entered 
-						postItem(name, score); 
-						// if completed it should show a toast message that it was done 
-						Intent intent = new Intent(getBaseContext(), LeaderboardActivity.class);
-						startActivity(intent); 
+					try {
+						postItem(name, score);
+					} catch (ClientProtocolException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (URISyntaxException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (ParserConfigurationException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (SAXException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					} 
-					else 
-					{ 
-						// throw a toast error 
-						Toast.makeText(GameOver.this, "Fill in the name", Toast.LENGTH_SHORT).show(); 
-					} 
-				} 
-				catch (Exception e) { 
-					e.printStackTrace(); 
-				} 
-			}
+
+					//Toast.makeText(GameOver.this, "Added " + score + " " + name, Toast.LENGTH_SHORT).show(); 
+					Intent intent = new Intent(getBaseContext(), LeaderboardActivity.class);
+					startActivity(intent); 
+
+				}
+				else
+				{
+					Toast.makeText(GameOver.this, "Fill in Name", Toast.LENGTH_SHORT).show(); 
+				}
+
+			}	
+
 		}) ;  
 	}
 
@@ -89,8 +118,8 @@ public class GameOver extends Activity {
 	public void postItem(String name, int score) throws URISyntaxException, ClientProtocolException, 
 	IOException, ParserConfigurationException, SAXException{ 
 		PostScore ic = new PostScore(); 
-		boolean item = ic.postScore(name, score); 
-		if (item == true) { 
+		boolean scores = ic.postScore(name, score); 
+		if (scores == true) { 
 			//Toast.makeText(GameOver.this, "Added " + score + " " + name, Toast.LENGTH_SHORT).show(); 
 		} else { 
 			//Toast.makeText(GameOver.this, "Could not add " + name, Toast.LENGTH_SHORT).show(); 

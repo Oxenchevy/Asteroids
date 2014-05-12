@@ -60,11 +60,14 @@ public class PostScore {
 			HttpResponse response = client.execute(request); 
 			// Parse response 
 			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) { 
+				System.out.println(response.getStatusLine().getStatusCode());
 				return true;                     
 			}  
 			else 
 			{ 
+				System.out.println(response.getStatusLine().getStatusCode());
 				return false; 
+				
 			} 
 		} 
  

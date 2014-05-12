@@ -538,6 +538,7 @@ public class Panel extends SurfaceView implements Callback  {
 
 		if(game.getShip().getHitpoints() < 1)
 		{
+			game.getShip().loseLife();
 			if (game.checkEndGame())
 			{			
 				thread.setRunning(false);
@@ -545,7 +546,7 @@ public class Panel extends SurfaceView implements Callback  {
 				Intent gameover = new Intent (context, GameOver.class);
 				context.startActivity(gameover);						
 			}
-			game.getShip().loseLife();
+		
 			game.getShip().setHitpoints(6);
 
 		}
