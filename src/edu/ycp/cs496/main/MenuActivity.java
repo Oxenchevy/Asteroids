@@ -22,7 +22,7 @@ public class MenuActivity extends Activity {
 		setDefaultView(); 
 		
 		//Start Music
-        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.asteroids);
+        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.darkspace);
 		mediaPlayer.start(); // no need to call prepare(); create() does that for you
 	}
 	

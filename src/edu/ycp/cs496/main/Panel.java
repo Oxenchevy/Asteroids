@@ -49,12 +49,11 @@ public class Panel extends SurfaceView implements Callback  {
 	private Context context;
 
 	//Media
-	private SoundPool sp;
-	private int soundIds[] = new int[10]; 
-	private boolean loaded = false; 
-	private long timeToLoad; 
 	private MediaPlayer mp; 
-
+	private MediaPlayer laserSound; 
+	private MediaPlayer death; 
+	private MediaPlayer background;
+	
 	//Bitmaps
 	private Bitmap shipBitMap;
 	private Bitmap cRotate;
@@ -98,6 +97,7 @@ public class Panel extends SurfaceView implements Callback  {
 	private boolean countdown; 
 	private boolean countSound; 
 	private SparseArray<PointF> mActivePointers = new SparseArray<PointF>();
+
 
 	@SuppressLint("NewApi")
 	public Panel(Context context) {
@@ -174,8 +174,10 @@ public class Panel extends SurfaceView implements Callback  {
 		}); 
 
 		 */
-
+		death = MediaPlayer.create(context, R.raw.explosion);
 		mp = MediaPlayer.create(context, R.raw.countdown);
+		laserSound = MediaPlayer.create(context, R.raw.laser_sound);
+		background = MediaPlayer.create(context, R.raw.background); 
 		countSound = true; 
 		//Create game model
 		game = new Game(mWidth, mHeight); 
@@ -216,6 +218,7 @@ public class Panel extends SurfaceView implements Callback  {
 			}
 			else{
 				countSound = false; 
+				
 			}
 
 			Paint p = new Paint(); 
@@ -237,7 +240,9 @@ public class Panel extends SurfaceView implements Callback  {
 
 		else{
 			countdown = false; 
-			mp.stop(); 
+			mp.stop();
+			background.setLooping(true);
+			background.start();
 		}
 
 	}
@@ -269,7 +274,7 @@ public class Panel extends SurfaceView implements Callback  {
 			fire(); 
 
 			fire = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_fire_press);
-
+			laserSound.start(); 
 		}
 
 		if(buttonHits(x, y) == ButtonType.NONE){
@@ -287,7 +292,7 @@ public class Panel extends SurfaceView implements Callback  {
 
 			fire = BitmapFactory.decodeResource(getResources(), R.drawable.image_button_fire);
 
-
+		
 
 		}
 
@@ -356,7 +361,7 @@ public class Panel extends SurfaceView implements Callback  {
 
 
 	public void fire(){
-		if(System.currentTimeMillis() - fireTime > 100){
+		if(System.currentTimeMillis() - fireTime > 150){
 			projCont.fire(mHeight, mWidth); 
 		}
 
@@ -539,6 +544,8 @@ public class Panel extends SurfaceView implements Callback  {
 		if(game.getShip().getHitpoints() < 1)
 		{
 			game.getShip().loseLife();
+			death.start(); 
+			
 			if (game.checkEndGame())
 			{			
 				thread.setRunning(false);
@@ -546,7 +553,7 @@ public class Panel extends SurfaceView implements Callback  {
 				
 				((Activity) context).finish();
 				Intent gameover = new Intent (context, GameOver.class);
-				
+				background.stop();
 				context.startActivity(gameover);		
 				
 			}
