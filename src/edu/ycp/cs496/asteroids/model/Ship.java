@@ -21,9 +21,9 @@ public class Ship extends User {
 		this.y = y; 
 		theta = 0; 
 		// INITIALIZE DIRECTION
-		hitpoints = 3;
+		hitpoints = 6;
 		radius = 40;
-		lives = 1;
+		lives = 2;
 		
 		projectiles = new ArrayList<Projectile>(); 
 	}
